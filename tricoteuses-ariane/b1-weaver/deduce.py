@@ -19,13 +19,23 @@ import weaver as w
 _TRIGGER = re.compile(r"amendement|scrutin|voi[xe]", re.I)
 _NUMBER = re.compile(r"\b(\d{1,4})\b")
 _ARTICLE_NUM = re.compile(r"article\s+(\d{1,4})", re.I)
+# a chair's numbered floor-call — «Le 310, Madame de Pélichy» / «186, Madame Catala»:
+# a number at a call position (sentence start, or after «le») immediately followed by
+# «, [civilité]». Lets the amendment be recognised without an amendement/scrutin word.
+# Anchored so «à 15h30, Madame …» (the digits sit after «h», not «le»/start) does NOT fire.
+_CALL_NUMBER = re.compile(
+    r"(?:^|[.!?]\s*|\ble\s+)(?:n[°ºo]\s*)?\d{1,4}\s*,\s*(?:monsieur|madame|m\.|mme)\b", re.I)
 _AMDT_UID_NUM = re.compile(r"N(\d{6})$")
 
 # civility + capitalized name(s); bare titles slip through on purpose — the
-# resolver is what refuses them (title-only → None, D3)
+# resolver is what refuses them (title-only → None, D3). Nobiliary particles
+# (de/du/des/d') and «le/la» may sit before/between the capitalized parts, e.g.
+# «Madame de Pélichy», «Monsieur de La Porte» — the lowercase «de» used to break it.
+_NAME_PART = r"(?:(?:l[ea]|de|du|des)\s+|d['’]\s*)"
 _SPEAKER = re.compile(
     r"\b(?:[Mm]onsieur|[Mm]adame|M\.|Mme)\s+"
-    r"(?:l[ea]\s+)?[A-ZÀÂÉÈÊËÎÏÔÙÛÇ][\w'’-]*(?:\s+[A-ZÀÂÉÈÊËÎÏÔÙÛÇ][\w'’-]*)*")
+    r"(?:" + _NAME_PART + r")*[A-ZÀÂÉÈÊËÎÏÔÙÛÇ][\w'’-]*"
+    r"(?:\s+(?:" + _NAME_PART + r")*[A-ZÀÂÉÈÊËÎÏÔÙÛÇ][\w'’-]*)*")
 
 _BALLOT_OPEN = re.compile(r"scrutin\s+est\s+ouvert", re.I)
 _BALLOT_VOTE = re.compile(r"met(?:s|tre)?\s+aux?\s+voi[xe]", re.I)
@@ -63,7 +73,7 @@ def extract_amendment_numbers(text):
     vote counts, not amendments («… Madame la rapporteure, 292. Résultat du scrutin,
     majorité 16 pour 10 contre 20.» → [292], never the tally). Robustness comes from
     the agenda lookup downstream: numbers not on the agenda resolve to nothing."""
-    if not _TRIGGER.search(text):
+    if not (_TRIGGER.search(text) or _CALL_NUMBER.search(text)):
         return []
     out = []
     for sentence in re.split(r"[.!?]+", text):
@@ -418,6 +428,8 @@ class Deducer:
         self._prev_tail = None  # previous utterance, for cross-utterance sentences
         self._pending_speaker = None  # name split before a handoff continuation
         self._scrutin_pending = None  # amdts announced «scrutin public», awaiting demandeur
+        self._voting = None  # amdt whose scrutin is OPEN — the OCR result attaches to IT,
+                             # not to _current (which may have moved to the next amendment)
 
     def set_referentials(self, actors, organes=None, amendments=None):
         """Swap the lookup dictionaries in place — sittings follow one another
@@ -463,7 +475,11 @@ class Deducer:
             if e is None:
                 continue  # not on the agenda: honesty over coverage
             canonical = self._amendment_canonical(e)
-            self._current = canonical  # even if already woven: context moves
+            # when several amendments are announced together («176 et 310»), the
+            # debate opens on the FIRST — it is discussed before the next; a later
+            # utterance naming one of them alone re-anchors the context to it
+            if not amdt_targets:
+                self._current = canonical
             amdt_targets.append(canonical)
             if e["uid"] in self._woven_uids:
                 continue
@@ -525,6 +541,8 @@ class Deducer:
         action = extract_ballot(text)
         if action:
             canonical = dict(self._current) if self._current else dict(EMPTY_CANONICAL)
+            if action in ("open", "vote"):
+                self._voting = canonical  # this amendment is now under the open scrutin
             out.append(self._node(t, "ballot", _BALLOT_LABEL[action], canonical))
 
         self._prev_tail = text
@@ -614,7 +632,10 @@ class Deducer:
             text = _BALLOT_LABEL["adopted" if pour >= majorite else "rejected"]
         else:
             text = "Résultat du scrutin"
-        canonical = dict(self._current) if self._current else dict(EMPTY_CANONICAL)
+        # the figures belong to the amendment PUT TO THE VOTE (scrutin ouvert), which
+        # may differ from _current once the chair has called the next amendment
+        base = self._voting or self._current
+        canonical = dict(base) if base else dict(EMPTY_CANONICAL)
         node = self._node(event["t_ms"], "ballot", text, canonical, source="ocr")
         node["result"] = {k: event.get(k) for k in
                           ("votants", "exprimes", "majorite", "pour", "contre",

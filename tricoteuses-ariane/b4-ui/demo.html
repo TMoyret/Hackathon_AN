@@ -277,6 +277,15 @@ const DIRECT_ID_DEFAULT = "19289735_6a44fdbe54da8";
 const liveHlsUrl = (id) => `http://anorigin.vodalys.com/live/live36/stream36_1_${id}.m3u8`;
 const RESTANTS_INIT = 47;   // amendements restants au départ (indicatif)
 const T0 = 21*3600;         // repli d'affichage si aucun epoch vidéo connu
+// retard VOLONTAIRE de la trame vs la vidéo (s) : le STT horodate le DÉBUT de la
+// parole, un poil avant l'action à l'écran → sans ça la trame arrive en avance.
+// Ajuster entre 2 et 4 selon le ressenti. N'affecte que l'affichage de la trame,
+// ni l'horloge ni la vidéo.
+const TRAME_LAG_S = 6;
+// durée MAX d'affichage du résultat d'un scrutin (s) avant d'enchaîner sur
+// l'amendement suivant du même groupe annoncé (« 176 et 310 » : on montre le
+// chiffré de 176, puis, après ce délai, la carte passe à 310). Ajustable.
+const RESULT_GRACE_S = 8;
 
 /* ---- liens canoniques (mêmes formats que l'ancienne UI B4) ---- */
 const acteurUrl = (pa) => `https://www.assemblee-nationale.fr/dyn/deputes/${pa}`;
@@ -455,7 +464,7 @@ function onNode(n){
 function deriveState(events, t){
   const past = [], state = {phase:"—", article:null, orateur:null, amendement:null,
                             vote:null, voteEvent:null, sorts:{}, sortis:0, avis:{},
-                            scrutinPublic:{}, voteResult:{}};   // scrutinPublic/voteResult keyed by uid
+                            scrutinPublic:{}, voteResult:{}, voteResultAt:{}};   // …At = instant (ts) du chiffré
   for(const e of events){
     if(e.ts > t) break;
     past.push(e);
@@ -463,7 +472,13 @@ function deriveState(events, t){
       case "article": state.article = e; state.amendement = null; state.vote = null; state.voteEvent = null;
                       state.avis = {};
                       state.phase = "Discussion des articles"; break;
-      case "appel_amendement": state.amendement = e; state.vote = null;
+      case "appel_amendement":
+                      // annonce groupée « 176 et 310 » : le débat s'ouvre sur le premier ;
+                      // un amendement annoncé au même instant ne reprend pas la carte
+                      if(state.amendement && state.amendement.ts === e.ts) break;
+                      // nouvel amendement = nouveau débat : l'orateur précédent n'a plus
+                      // la parole ; on attend le prochain appel plutôt que de l'afficher périmé
+                      state.amendement = e; state.orateur = null; state.vote = null;
                       state.voteEvent = null; state.avis = {};
                       state.phase = "Discussion des articles"; break;
       case "orateur": state.orateur = e; break;
@@ -471,14 +486,27 @@ function deriveState(events, t){
       case "scrutin_public":   // annonce présidence : garder les demandeurs par amendement
         if(e.uid) state.scrutinPublic[e.uid] = e.demandeurs || []; break;
       case "mise_aux_voix": state.vote = "ouvert"; state.voteEvent = e.scrutinUrl ? e : (state.voteEvent || e);
-                      if(e.result && e.uid) state.voteResult[e.uid] = {...e.result, confiance:e.confiance};
+                      if(e.result && e.uid){ state.voteResult[e.uid] = {...e.result, confiance:e.confiance};
+                        state.voteResultAt[e.uid] = e.ts; }
                       state.phase = "Vote en cours"; break;
       case "sort_amendement":
         e.nums.forEach(num => state.sorts[num] = e.sort);
         state.sortis += e.nums.length;
         state.vote = e.sort; state.voteEvent = e.scrutinUrl ? e : (state.voteEvent || e);
-        if(e.result && e.uid) state.voteResult[e.uid] = {...e.result, sort:e.sort, confiance:e.confiance};
+        if(e.result && e.uid){ state.voteResult[e.uid] = {...e.result, sort:e.sort, confiance:e.confiance};
+          state.voteResultAt[e.uid] = e.ts; }
         state.phase = "Discussion des articles"; break;
+    }
+  }
+  // limite d'affichage du résultat : RESULT_GRACE_S après le chiffré d'un amendement,
+  // la carte enchaîne sur le suivant du même groupe annoncé (« 176 et 310 » → 310).
+  // Tant que le scrutin n'a pas de chiffré, on reste sur l'amendement courant.
+  if(state.amendement){
+    const rAt = state.voteResultAt[state.amendement.uid];
+    if(rAt != null && t >= rAt + RESULT_GRACE_S){
+      const sib = events.find(e => e.type === "appel_amendement"
+        && e.ts === state.amendement.ts && e.uid && e.uid !== state.amendement.uid);
+      if(sib){ state.amendement = sib; state.avis = {}; }   // avis propres au suivant
     }
   }
   return {state, past};
@@ -633,7 +661,8 @@ function renderCtx(state){
 
 let lastPastLen = -1;
 function render(t){
-  const {state, past} = deriveState(EVENTS, t);
+  // trame dérivée à t − TRAME_LAG_S (retard volontaire) ; horloge sur le vrai t vidéo
+  const {state, past} = deriveState(EVENTS, t - TRAME_LAG_S);
   $("clock").textContent = fmtClock(t);
   $("phase-chip").textContent = state.phase;
   $("restants").textContent = Math.max(0, RESTANTS_INIT - state.sortis);
@@ -666,9 +695,11 @@ function currentT(){
   return 0;
 }
 function seekTo(ts){
-  if(mode === "mp4") video.currentTime = ts;
-  else if(mode === "sim"){ simT = ts; }
-  else if(mode === "b2") transport("seek", `?t=${Math.floor(ts*1000)}`);
+  // + TRAME_LAG_S : caler la vidéo pour que l'événement à `ts` devienne courant
+  // (cohérent avec le retard trame appliqué au rendu)
+  if(mode === "mp4") video.currentTime = ts + TRAME_LAG_S;
+  else if(mode === "sim"){ simT = ts + TRAME_LAG_S; }
+  else if(mode === "b2") transport("seek", `?t=${Math.floor((ts + TRAME_LAG_S)*1000)}`);
   /* live : pas de seek (bord d'attaque) */
 }
 function loop(){ render(currentT()); requestAnimationFrame(loop); }

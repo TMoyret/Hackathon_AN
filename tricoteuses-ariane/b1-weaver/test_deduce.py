@@ -48,6 +48,28 @@ def test_extract_speaker_names_real_sentences():
         "Oui, merci Madame la Présidente.")
 
 
+def test_extract_speaker_names_handles_nobiliary_particle():
+    """Lowercase «de/du/d'» particles must not break capture (real: «Madame de
+    Pélichy» yielded nothing before)."""
+    assert deduce.extract_speaker_names("Le 310, Madame de Pellichy.") == ["Madame de Pellichy"]
+    assert deduce.extract_speaker_names("La parole est à Monsieur de Courson.") == ["Monsieur de Courson"]
+    assert deduce.extract_speaker_names("Madame de La Porte") == ["Madame de La Porte"]
+    # unchanged: plain names and the thanked title still capture as before
+    assert deduce.extract_speaker_names("Monsieur Bazin.") == ["Monsieur Bazin"]
+    assert "Madame la Présidente" in deduce.extract_speaker_names("Merci Madame la Présidente.")
+
+
+def test_extract_amendment_numbers_from_numbered_floor_call():
+    """A chair's «Le 310, Madame X» / «186, Madame Y» names the amendment without an
+    amendement/scrutin word — recognised via the numbered-call pattern, but «15h30»
+    (digits after «h», not «le»/start) must NOT fire."""
+    assert deduce.extract_amendment_numbers("Le 310, Madame de Pellichy.") == [310]
+    assert deduce.extract_amendment_numbers("Le n° 310, Madame de Pélichy.") == [310]
+    assert deduce.extract_amendment_numbers("Merci. 186, Madame Catala.") == [186]
+    assert deduce.extract_amendment_numbers("à 15h30, Madame la Présidente") == []
+    assert deduce.extract_amendment_numbers("on examine le budget 2016, Madame") == []
+
+
 def test_extract_ballot_real_sentences():
     assert deduce.extract_ballot("Le scrutin est ouvert.") == "open"
     assert deduce.extract_ballot(
@@ -234,6 +256,21 @@ def test_deducer_scrutin_result_outcome_and_no_amendment():
     assert node["text"] == "Adopté"                       # pour 55 >= majorité 41
     assert node["canonical"] == deduce.EMPTY_CANONICAL
     assert node["result"]["pour"] == 55
+
+
+def test_scrutin_result_attaches_to_voting_amendment_not_current():
+    """The figures belong to the amendment PUT TO THE VOTE («scrutin ouvert»), even
+    after the chair has already called the NEXT one — real 02/07: 176 is voted, then
+    «Le 310, Madame de Pélichy» moves _current to 310 right before the result screen."""
+    d = deduce.Deducer(deduce.AgendaIndex.from_derouleur(SP_AGENDA), [], organes=SP_ORGANES)
+    d.feed(utter("sur les deux suivants, 176 et 310, je suis saisie de scrutin public"))
+    d.feed(utter("Le scrutin est ouvert."))               # 176's scrutin opens → _voting=176
+    d.feed(utter("Le 310, Madame de Pellichy."))          # chair calls 310 → _current=310
+    (node,) = d.feed_scrutin_result(
+        {"t_ms": 1107000, "votants": 30, "exprimes": 30, "majorite": 16,
+         "pour": 10, "contre": 20, "abstentions": 0, "confidence": 1.0})
+    assert node["canonical"]["amendement_uid"].endswith("N000176")   # NOT 310
+    assert d._current["amendement_uid"].endswith("N000310")          # context did move on
 
 
 def test_deducer_speaker_resolved_fuzzily_titles_refused():
@@ -542,6 +579,16 @@ def test_scrutin_pending_expires_after_one_utterance():
     # bound to the current amendment (247), NOT the stale 176/310 announcement
     assert len(sp) == 1
     assert sp[0]["canonical"]["amendement_uid"].endswith("N000247")
+
+
+def test_multi_announcement_context_opens_on_first():
+    """«176 et 310» announced together → the debate opens on 176 (discussed first),
+    so a ballot heard next attaches to 176, not the last-named 310. Verified against
+    the open-data: the first scrutin of the 02/07 pair (30/10/20) was amendment 176's."""
+    d = deduce.Deducer(deduce.AgendaIndex.from_derouleur(SP_AGENDA), [], organes=SP_ORGANES)
+    d.feed(utter("sur les deux suivants, 176 et 310, je suis saisie de scrutin public"))
+    (ballot,) = [n for n in d.feed(utter("Le scrutin est ouvert.")) if n["kind"] == "ballot"]
+    assert ballot["canonical"]["amendement_uid"].endswith("N000176")
 
 
 def test_scrutin_public_credits_only_amendment_before_the_clause():

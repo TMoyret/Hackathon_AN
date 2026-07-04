@@ -450,7 +450,13 @@ function deriveState(events, t){
       case "article": state.article = e; state.amendement = null; state.vote = null; state.voteEvent = null;
                       state.avis = {};
                       state.phase = "Discussion des articles"; break;
-      case "appel_amendement": state.amendement = e; state.vote = null;
+      case "appel_amendement":
+                      // annonce groupée « 176 et 310 » : le débat s'ouvre sur le premier ;
+                      // un amendement annoncé au même instant ne reprend pas la carte
+                      if(state.amendement && state.amendement.ts === e.ts) break;
+                      // nouvel amendement = nouveau débat : l'orateur précédent n'a plus
+                      // la parole ; on attend le prochain appel plutôt que de l'afficher périmé
+                      state.amendement = e; state.orateur = null; state.vote = null;
                       state.voteEvent = null; state.avis = {};
                       state.phase = "Discussion des articles"; break;
       case "orateur": state.orateur = e; break;
