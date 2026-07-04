@@ -9,9 +9,9 @@
        • bouton « ▶ Démo scrutin public » : cale la vidéo sur la séquence de
          scrutin public (donnée-pilotée depuis la trame) et lance la lecture ;
        • deep-link ?seek=mm:ss (URL marque-page) ;
-       • chargement AUTO de la vidéo servie par le fil (…:8100/video.mp4) — aucune
-         sélection de fichier, la vidéo s'ouvre déjà calée sur la séquence, en pause.
-     Ouvrir : http://127.0.0.1:8080/demo.html   (fil sur :8100, cf. DEMO-*.md)
+• chargement AUTO de la vidéo servie par le fil (/video.mp4) — aucune
+          sélection de fichier, la vidéo s'ouvre déjà calée sur la séquence, en pause.
+     Ouvrir : http://127.0.0.1:8080/demo.html   (proxy : /thread /video.mp4 vers :8100)
      ============================================================================ -->
 <!-- hls.js : Chrome/Firefox ne lisent pas le HLS nativement ; requis pour le
      direct AN (vodalys) et le replay B2. -->
@@ -215,7 +215,7 @@
       <div class="src-group adv">
         <span class="src-label">Fil Ariane B1 (SSE)</span>
         <div class="hls-row">
-          <input type="text" id="thread-url" value="http://127.0.0.1:8100/thread">
+          <input type="text" id="thread-url" value="/thread">
           <button id="btn-thread">↻</button>
         </div>
       </div>
@@ -268,7 +268,7 @@
    EVENTS n'est plus statique : il se remplit en direct depuis le fil B1.
    ===================================================================== */
 
-const B1_DEFAULT = "http://127.0.0.1:8100/thread";  // fil Ariane (SSE), éditable
+const B1_DEFAULT = "/thread";  // fil Ariane (SSE), éditable — proxied via serve.py
 const B2 = "http://127.0.0.1:8000";                 // serveur replay B2
 const B2_HLS = B2 + "/live/stream.m3u8";
 const DIRECT_ID_DEFAULT = "19289735_6a44fdbe54da8";
@@ -893,7 +893,7 @@ $("btn-full").onclick   = () => document.documentElement.requestFullscreen?.();
 // la vidéo servie par le fil : même hôte que le SSE, endpoint /video.mp4 (demo_replay)
 function filVideoUrl(){
   try{ return new URL($("thread-url").value.trim()).origin + "/video.mp4"; }
-  catch(e){ return "http://127.0.0.1:8100/video.mp4"; }
+  catch(e){ return "/video.mp4"; }
 }
 function loadDemoVideo(url){
   stopSim(); mode = "mp4"; setBadge("replay");
