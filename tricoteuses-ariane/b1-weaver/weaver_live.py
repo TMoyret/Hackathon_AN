@@ -54,20 +54,25 @@ SR = 16000
 
 
 def audio_frames(source, min_chunk=1.0, user_agent=None, referer=None,
-                 max_seconds=None):
+                 max_seconds=None, start_seconds=0.0):
     """Yield PCM float32 chunks from any video URL/file, via ffmpeg (-vn: audio only).
 
     On a live HLS playlist ffmpeg tracks the live edge by default (-live_start_index
     -3): B1 reads the present, ~30 s behind, not the DVR history. user_agent/referer
-    are the HTTP headers some CDNs (Vodalys/AN) require to serve the segments."""
+    are the HTTP headers some CDNs (Vodalys/AN) require to serve the segments.
+
+    start_seconds seeks the input before reading (-ss): used when B1 reads a VOD file
+    directly from the sitting start, so flow_s == content position and the emitted
+    timestamps land exactly on the video's currentTime."""
     headers = []
     if user_agent:
         headers += ["-user_agent", user_agent]
     if referer:
         headers += ["-referer", referer]
+    seek = ["-ss", f"{start_seconds:.3f}"] if start_seconds else []
     ff = subprocess.Popen(
-        ["ffmpeg", "-hide_banner", "-loglevel", "error", *headers, "-i", source,
-         "-vn", "-f", "s16le", "-ar", str(SR), "-ac", "1", "-"],
+        ["ffmpeg", "-hide_banner", "-loglevel", "error", *headers, *seek,
+         "-i", source, "-vn", "-f", "s16le", "-ar", str(SR), "-ac", "1", "-"],
         stdout=subprocess.PIPE,
     )
     chunk_samples = int(SR * min_chunk)
@@ -108,7 +113,8 @@ def _transcribe_local_agreement(source, weaver, emit_node, model="large-v3",
                                 device="cuda", compute_type="float16",
                                 user_agent=None, referer=None, vad=True,
                                 diar_worker=None, follow=False,
-                                max_seconds=None, time_offset_s=0.0):
+                                max_seconds=None, time_offset_s=0.0,
+                                start_seconds=0.0):
     """Drive Whisper over the source's audio, weaving every event into the thread."""
     from whisper_online import FasterWhisperASR, OnlineASRProcessor
 
@@ -142,7 +148,7 @@ def _transcribe_local_agreement(source, weaver, emit_node, model="large-v3",
         if remaining == 0.0:
             break
         for audio in audio_frames(source, user_agent=user_agent, referer=referer,
-                                  max_seconds=remaining):
+                                  max_seconds=remaining, start_seconds=start_seconds):
             captured_s += len(audio) / SR
             if diar_worker:
                 diar_worker.push(audio)  # tee: same PCM, same time axis
@@ -180,7 +186,7 @@ def _transcribe_chunked(source, weaver, emit_node, model="small", device="cpu",
                         vad=True, diar_worker=None, follow=False,
                         max_seconds=None, time_offset_s=0.0,
                         chunk_seconds=30.0, beam=1, cpu_threads=0,
-                        local_files_only=False):
+                        local_files_only=False, start_seconds=0.0):
     """CPU-friendly faster-whisper backend.
 
     It emits confirmed utterances after fixed-size chunks. This is less polished
@@ -244,7 +250,7 @@ def _transcribe_chunked(source, weaver, emit_node, model="small", device="cpu",
         if remaining == 0.0:
             break
         for audio in audio_frames(source, user_agent=user_agent, referer=referer,
-                                  max_seconds=remaining):
+                                  max_seconds=remaining, start_seconds=start_seconds):
             seconds = len(audio) / SR
             captured_s += seconds
             buf_s += seconds
@@ -267,7 +273,7 @@ def transcribe(source, weaver, emit_node, model="large-v3", backend="local-agree
                device="cuda", compute_type=None, user_agent=None, referer=None,
                vad=True, diar_worker=None, follow=False, max_seconds=None,
                time_offset_s=0.0, chunk_seconds=30.0, beam=1, cpu_threads=0,
-               local_files_only=False):
+               local_files_only=False, start_seconds=0.0):
     compute_type = compute_type or _default_compute_type(device)
     if backend == "chunked":
         return _transcribe_chunked(
@@ -276,12 +282,13 @@ def transcribe(source, weaver, emit_node, model="large-v3", backend="local-agree
             vad=vad, diar_worker=diar_worker, follow=follow,
             max_seconds=max_seconds, time_offset_s=time_offset_s,
             chunk_seconds=chunk_seconds, beam=beam, cpu_threads=cpu_threads,
-            local_files_only=local_files_only)
+            local_files_only=local_files_only, start_seconds=start_seconds)
     return _transcribe_local_agreement(
         source, weaver, emit_node, model=model, device=device,
         compute_type=compute_type, user_agent=user_agent, referer=referer,
         vad=vad, diar_worker=diar_worker, follow=follow,
-        max_seconds=max_seconds, time_offset_s=time_offset_s)
+        max_seconds=max_seconds, time_offset_s=time_offset_s,
+        start_seconds=start_seconds)
 
 def _fetch_json(url, timeout=15):
     req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
@@ -555,6 +562,10 @@ def main():
     ap.add_argument("--time-offset-ms", type=int, default=0,
                     help="add this offset to emitted thread timestamps; useful when "
                          "B2 starts its live HLS at sitting_start_ms")
+    ap.add_argument("--start-seconds", type=float, default=0.0,
+                    help="seek the source this many seconds before reading (-ss); use "
+                         "when B1 reads a VOD file directly from sitting_start so flow_s "
+                         "== video position and timestamps match the UI's currentTime")
     ap.add_argument("--chunk-seconds", type=float, default=30.0,
                     help="chunk size for --backend chunked")
     ap.add_argument("--beam", type=int, default=1,
@@ -630,7 +641,8 @@ def main():
                time_offset_s=args.time_offset_ms / 1000,
                chunk_seconds=args.chunk_seconds, beam=args.beam,
                cpu_threads=args.cpu_threads,
-               local_files_only=args.local_files_only)
+               local_files_only=args.local_files_only,
+               start_seconds=args.start_seconds)
     print("\n[done]", file=sys.stderr, flush=True)
 
 

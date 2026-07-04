@@ -166,13 +166,22 @@ def main() -> int:
         wait_http(f"{b2}/clock", 30)
         request(f"{b2}/clock/seek?t={start_ms}", method="POST")
 
+        # B1 reads the VOD file DIRECTLY, not B2's real-time HLS edge: on CPU the
+        # chunked STT runs ~0.46x realtime, so against B2's -re sliding window it
+        # falls behind, segments get deleted, and B1 reconnects to the live edge —
+        # skipping content. flow_s (audio actually read) then decouples from the
+        # video's currentTime and the horodatage drifts. Reading the file at B1's
+        # own pace (contiguous, seeked to sitting_start) makes flow_s == video
+        # position, so t == the UI's seek target to the millisecond. B2 stays up
+        # only to serve the referentials (agenda/actors/organes) below.
+        video = str(next(iter(sorted((record / "video").glob("*.mp4")))))
         b1_cmd = [
             sys.executable, "b1-weaver/weaver_live.py",
-            "--source", hls,
+            "--source", video,
+            "--start-seconds", f"{start_ms / 1000:.3f}",
             "--agenda", f"{b2}/local/derouleur/derouleur.json",
             "--actors", f"{b2}/referential/acteurs.json",
             "--organes", f"{b2}/referential/organes.json",
-            "--follow",
             "--port", str(args.b1_port),
             "--out", str(thread_out),
             "--backend", "chunked",

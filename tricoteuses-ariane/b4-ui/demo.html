@@ -3,7 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Trame Vivante — Régie (Ariane B4)</title>
+<title>Trame Vivante — DÉMO scrutin public (Ariane B4)</title>
+<!-- ============================================================================
+     COPIE DÉMO autonome de index.html — ne modifie rien d'autre. Ajouts :
+       • bouton « ▶ Démo scrutin public » : cale la vidéo sur la séquence de
+         scrutin public (donnée-pilotée depuis la trame) et lance la lecture ;
+       • deep-link ?seek=mm:ss (URL marque-page) ;
+       • chargement AUTO de la vidéo servie par le fil (…:8100/video.mp4) — aucune
+         sélection de fichier, la vidéo s'ouvre déjà calée sur la séquence, en pause.
+     Ouvrir : http://127.0.0.1:8080/demo.html   (fil sur :8100, cf. DEMO-*.md)
+     ============================================================================ -->
 <!-- hls.js : Chrome/Firefox ne lisent pas le HLS nativement ; requis pour le
      direct AN (vodalys) et le replay B2. -->
 <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
@@ -143,6 +152,8 @@
     cursor:pointer; font-size:12.5px; font-weight:600;}
   footer button:hover{border-color:var(--bleu); color:var(--bleu);}
   footer button.active{background:var(--bleu); color:#fff; border-color:var(--bleu);}
+  footer button.demo-btn{background:var(--bleu); color:#fff; border-color:var(--bleu);}
+  footer button.demo-btn:hover{background:#0000b3; color:#fff;}
   #transport{display:inline-flex; align-items:center; gap:5px;}
   #transport input{width:56px; padding:5px; border:1px solid var(--bord); border-radius:5px; font-size:12px;}
   #b2-clock{font-family:ui-monospace,monospace; font-size:12px; color:var(--gris); margin-left:4px;}
@@ -163,6 +174,7 @@
     <h1 id="seance-titre">Trame vivante — Assemblée nationale</h1>
     <div class="meta">Trame déduite de la parole (fil Ariane B1) — orateurs, amendements et scrutins reliés à leurs fiches canoniques</div>
   </div>
+  <span class="badge" id="demo-badge" style="background:#fdece0;color:#b34000">DÉMO</span>
   <span class="badge replay" id="mode-badge">REPLAY</span>
   <span class="phase-chip" id="phase-chip">—</span>
   <span class="clock" id="clock">--:--:--</span>
@@ -234,6 +246,7 @@
       <button id="tp-goto">→</button>
       <span id="b2-clock">—</span>
     </span>
+    <button id="btn-demo" class="demo-btn" title="Caler la vidéo sur la séquence de scrutin public et lancer la lecture">▶ Démo scrutin public</button>
     <button id="btn-source" title="Changer de source vidéo">⏏ Source</button>
     <button id="btn-glass" title="Afficher la source officielle et la confiance sous chaque événement">🔍 Glass-box</button>
     <button id="btn-full" title="Mode présentation">⛶ Plein écran</button>
@@ -844,30 +857,63 @@ $("btn-glass").onclick  = e => { document.body.classList.toggle("glassbox");
 $("btn-full").onclick   = () => document.documentElement.requestFullscreen?.();
 
 /* =====================================================================
-   9. Démarrage
+   8bis. Ajouts DÉMO (spécifiques à ce fichier)
    ===================================================================== */
-loadRecords();
+// la vidéo servie par le fil : même hôte que le SSE, endpoint /video.mp4 (demo_replay)
+function filVideoUrl(){
+  try{ return new URL($("thread-url").value.trim()).origin + "/video.mp4"; }
+  catch(e){ return "http://127.0.0.1:8100/video.mp4"; }
+}
+function loadDemoVideo(url){
+  stopSim(); mode = "mp4"; setBadge("replay");
+  $("transport").style.display = "none"; startEpoch = null;
+  hideOverlay(); setState("vidéo de démo (fil) — prête");
+  video.src = url || filVideoUrl();
+  video.onerror = () => { setState("vidéo du fil injoignable — ⏏ Source → VOD locale"); showOverlay(); };
+}
+// "17:26" → 1046 s ; "1046" → 1046 s
+function parseSeek(raw){
+  raw = (raw || "").trim();
+  const m = /^(\d+):([0-5]?\d)$/.exec(raw);
+  if(m) return parseInt(m[1],10)*60 + parseInt(m[2],10);
+  const n = parseFloat(raw); return isNaN(n) ? null : n;
+}
+// instant du 1er amendement en scrutin public de la trame reçue (petit lead avant l'appel)
+function scrutinPublicTs(){
+  const e = EVENTS.find(x => x.type === "appel_amendement" && x.scrutin_public);
+  return e ? Math.max(0, e.ts - 6) : null;
+}
+function jumpToScrutinPublic(){
+  const ts = scrutinPublicTs();
+  if(ts == null){ setState("aucun scrutin public dans la trame reçue"); return; }
+  if(mode !== "mp4") loadDemoVideo();
+  seekTo(ts);
+  video.play().catch(()=>{});
+}
+$("btn-demo").onclick = jumpToScrutinPublic;
+
+/* =====================================================================
+   9. Démarrage DÉMO : fil + vidéo auto + calage sur le scrutin public, en pause
+   ===================================================================== */
 connectThread();
-// ?video=<url>[&epoch=<s>] : charger une VOD par URL (démo/replay hors B2) ;
-// sinon si B2 répond, session replay ; sinon, direct AN.
-(async () => {
+(() => {
   const q = new URLSearchParams(location.search);
-  if(q.get("video")){
-    if(q.get("epoch")) startEpoch = parseInt(q.get("epoch"), 10) || null;
-    mode = "mp4"; setBadge("replay"); $("transport").style.display = "none";
-    video.src = q.get("video"); video.play().catch(()=>{});
-    hideOverlay();
-    return;
-  }
-  try{
-    const s = await (await fetch(B2 + "/clock")).json();
-    await b2Anchor();
-    mode = "b2"; setBadge("replay"); $("transport").style.display = "inline-flex";
-    if(s.playing){ if(await waitForPlaylist()) playUrl(B2_HLS, "REPLAY B2 — bord d'attaque"); }
-    else setState("replay B2 en pause — ▶ pour lancer");
-    return;
-  }catch(e){ /* B2 éteint : on bascule sur le direct */ }
-  playLive();
+  if(q.get("epoch")) startEpoch = parseInt(q.get("epoch"), 10) || null;
+  // ?video=<url> explicite, sinon la vidéo servie par le fil (…:8100/video.mp4)
+  loadDemoVideo(q.get("video") || null);
+  // cible : ?seek=mm:ss si fourni, sinon la séquence scrutin public (donnée-pilotée)
+  const seekParam = q.get("seek");
+  const target = () => seekParam != null ? parseSeek(seekParam) : scrutinPublicTs();
+  // caler dès que la vidéo est prête ET la trame arrivée (SSE peut suivre les métadonnées),
+  // puis PAUSE : la démo s'ouvre sur la bonne image, on lance d'un clic (bouton ou ▶ vidéo)
+  video.addEventListener("loadedmetadata", () => {
+    let tries = 0;
+    const iv = setInterval(() => {
+      const ts = target();
+      if(ts != null){ video.currentTime = ts; video.pause(); clearInterval(iv); }
+      else if(++tries > 50) clearInterval(iv);   // ~5 s : trame vide → on laisse au début
+    }, 100);
+  }, {once:true});
 })();
 
 render(0);

@@ -19,7 +19,7 @@ Actor uid = "PA" + tribun_id (the #9 bridge, 136/136 on the FIN DE VIE capture).
 Resolved slices (flat fields straight off the API, ready for B1's clickable labels):
   acteurs.json      uid, civ, prenom, nom, slug, groupe_uid
   organes.json      uid, libelle, libelle_abrege, code_type    (groups + chamber)
-  amendements.json  uid, numero, auteur_ref, groupe_ref, division, sort
+  amendements.json  uid, numero, auteur_ref, groupe_ref, division, dossier, sort
   documents.json    uid, titre, type    (L17 proposition + rapport)
 
 Output under <record>/referential/:
@@ -169,6 +169,7 @@ def slice_amendements(rows):
     return [{"uid": r.get("uid"), "numero": r.get("numeroLong"),
              "auteur_ref": r.get("acteurRefUid"), "groupe_ref": r.get("groupePolitiqueRefUid"),
              "division": r.get("divisionTitre") or r.get("divisionArticleDesignationCourte"),
+             "dossier": r.get("dossierRefUid"),
              "sort": r.get("sortEnSeance") or r.get("sort")} for r in rows]
 
 

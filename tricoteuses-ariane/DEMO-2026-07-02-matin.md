@@ -146,11 +146,19 @@ Dans **deux** terminaux (ou l'un en arrière-plan) :
 
 ```powershell
 # terminal 1 : re-tisse le fil hors-ligne + le sert en SSE sur :8100 (même forme que B1)
-C:\Python314\python.exe b4-ui\demo_replay.py --bundle data\2026-07-02-matin --port 8100
+#   --ocr = scanne demo-faststart.mp4 (tesseract) et tisse le chiffré des scrutins
+#           (votants/exprimés/majorité/POUR/CONTRE). ~quelques min de scan, UNE fois.
+C:\Python314\python.exe b4-ui\demo_replay.py --bundle data\2026-07-02-matin --port 8100 --ocr
 
 # terminal 2 : sert l'UI
 C:\Python314\python.exe b4-ui\serve.py --port 8080
 ```
+
+> Le scan OCR écrit le fil complet dans `b4-ui\thread.ndjson`. Pour **redémarrer
+> instantanément** ensuite (sans re-scanner), servir ce fichier tel quel :
+> `demo_replay.py --bundle data\2026-07-02-matin --port 8100 --thread-file b4-ui\thread.ndjson`.
+> Sans `--ocr`, la démo montre déjà le badge et les demandeurs (déduits de la parole) ;
+> seuls les **chiffres du scrutin** (lus sur l'écran-résultat) nécessitent le scan.
 
 Puis **http://127.0.0.1:8080** :
 
@@ -161,6 +169,14 @@ Puis **http://127.0.0.1:8080** :
 
 Le fil complet des 20 min s'affiche **instantanément**, cliquable, horodaté, avec
 tous les liens — sans GPU, sans réseau, sans attente.
+
+**Scrutins publics** (nouveau) : quand le président annonce « je suis saisie de
+scrutin public », les amendements concernés portent un **badge « scrutin public »** ;
+si les **groupes demandeurs** sont nommés (« demandé respectivement par les groupes
+La France insoumise et LIOT »), la carte affiche **« Scrutin demandé par … »** (lien
+vers la fiche du groupe). À la proclamation, l'**écran-résultat** incrusté est lu par
+OCR et la carte se complète des **chiffres** (POUR / CONTRE / votants / majorité).
+Exemple à ~18 min : amendement n° 310 (M. Molac), demandé par LIOT.
 
 ---
 
@@ -194,7 +210,8 @@ $run = Get-ChildItem .runs -Directory -Filter 'option3-cpu-*' | Sort-Object Last
 C:\Python314\python.exe tools\thread_to_stt_offline.py "$($run.FullName)\thread.ndjson" data\2026-07-02-matin\stt-offline-large-v3.ndjson
 
 # --- DEMAIN MATIN : replay instantané ---
-C:\Python314\python.exe b4-ui\demo_replay.py --bundle data\2026-07-02-matin --port 8100          # terminal 1
+C:\Python314\python.exe b4-ui\demo_replay.py --bundle data\2026-07-02-matin --port 8100 --ocr     # terminal 1 (--ocr : chiffré des scrutins ; ~qq min de scan une fois)
 C:\Python314\python.exe b4-ui\serve.py --port 8080                                                # terminal 2
+#   redémarrage instantané sans re-scan : ... --port 8100 --thread-file b4-ui\thread.ndjson
 #   UI : http://127.0.0.1:8080  → SSE :8100/thread (↻)  + ⏏ Source → VOD locale = demo-faststart.mp4  (PAS ▶ Direct)
 ```

@@ -55,7 +55,7 @@ class Handler(SimpleHTTPRequestHandler):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--port", type=int, default=8080)
+    ap.add_argument("--port", type=int, default=int(os.environ.get("PORT", "8080")))
     args = ap.parse_args()
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
     httpd = ThreadingHTTPServer(("127.0.0.1", args.port), Handler)
