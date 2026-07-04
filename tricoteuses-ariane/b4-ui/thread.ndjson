@@ -1,0 +1,314 @@
+{"t": 906980, "seq": 0, "kind": "utterance", "state": "consolidated", "text": "Bonjour à toutes et à tous. La séance est ouverte. L'ordre du jour appelle la suite de la discussion du projet de loi sur la justice criminelle et le respect des victimes.", "source": "stt"}
+{"t": 916260, "seq": 1, "kind": "utterance", "state": "consolidated", "text": "Hier soir, l'Assemblée a poursuivi l'examen des articles s'arrêtant à l'amendement 245 à l'article 3. Amendement 245, M. Duplessis.", "source": "stt"}
+{"t": 916260, "seq": 2, "kind": "amendment", "state": "consolidated", "text": "Adt n° 245 de M. DUPLESSY", "canonical": {"acteur": "PA841351", "tribun": "841351", "amendement_uid": "AMANR5L17PO838901B2681P0D1N000245", "scrutin": null, "article": "D_Article_3", "groupe": null}, "source": "stt"}
+{"t": 916260, "seq": 3, "kind": "speaker", "state": "consolidated", "text": "M. Emmanuel Duplessy", "canonical": {"acteur": "PA841351", "tribun": "841351", "amendement_uid": null, "scrutin": null, "article": null, "groupe": "PO845439"}, "source": "stt", "call": "strong", "heard": "M. Duplessis", "groupe_label": "Écologiste et Social"}
+{"t": 926980, "seq": 4, "kind": "utterance", "state": "consolidated", "text": "Merci, Mme la Présidente. Cet amendement vise à supprimer les deux innovations majeures que porte ce texte.", "source": "stt"}
+{"t": 935490, "seq": 5, "kind": "utterance", "state": "consolidated", "text": "en matière de preuves et de conduite d'enquête, le portrait robotique génétique et les recherches de parenté génétique à partir de bases de données étrangères.", "source": "stt"}
+{"t": 945170, "seq": 6, "kind": "utterance", "state": "consolidated", "text": "On ne parle plus ici d'utiliser l'ADN pour identifier une personne, mais on parle d'utiliser l'ADN pour déduire des caractéristiques physiques", "source": "stt"}
+{"t": 953630, "seq": 7, "kind": "utterance", "state": "consolidated", "text": "ou remonter jusqu'à un suspect par l'intermédiaire de membres de sa famille.", "source": "stt"}
+{"t": 959350, "seq": 8, "kind": "utterance", "state": "consolidated", "text": "Ces dispositifs posent évidemment des vraies questions sur l'atteinte.", "source": "stt"}
+{"t": 965490, "seq": 9, "kind": "utterance", "state": "consolidated", "text": "quant à la vie privée, puisqu'il permet notamment d'accéder à l'air,", "source": "stt"}
+{"t": 969990, "seq": 10, "kind": "utterance", "state": "consolidated", "text": "quand bien même elle ne dit pas que le dispositif est par nature illégal,", "source": "stt"}
+{"t": 974750, "seq": 11, "kind": "utterance", "state": "consolidated", "text": "a nourri quand même de nombreux doutes quant à son utilisation.", "source": "stt"}
+{"t": 978730, "seq": 12, "kind": "utterance", "state": "consolidated", "text": "Et sur la question d'aller piocher ces éléments ADN dans des bases commerciales étrangères,", "source": "stt"}
+{"t": 983930, "seq": 13, "kind": "utterance", "state": "consolidated", "text": "je crois qu'on a déjà eu de longs débats sur l'inopportunité de cette mesure hier soir.", "source": "stt"}
+{"t": 990990, "seq": 14, "kind": "utterance", "state": "consolidated", "text": "Merci Madame la rapporteure, votre avis ?", "source": "stt"}
+{"t": 994190, "seq": 15, "kind": "utterance", "state": "consolidated", "text": "Oui, merci Madame.", "source": "stt"}
+{"t": 995490, "seq": 16, "kind": "utterance", "state": "consolidated", "text": "La présidente, bonjour à toutes et bonjour à tous.", "source": "stt"}
+{"t": 997570, "seq": 17, "kind": "utterance", "state": "consolidated", "text": "... puisqu'il supprime moins d'alinéa que celui de monsieur Duplessis,", "source": "stt"}
+{"t": 1002270, "seq": 18, "kind": "utterance", "state": "consolidated", "text": "là aussi pour supprimer le portrait robot génétique tel qu'il a été rédigé par le Sénat.", "source": "stt"}
+{"t": 1010230, "seq": 19, "kind": "utterance", "state": "consolidated", "text": "Monsieur le ministre, double avis défavorable, scrutin public, on vote.", "source": "stt"}
+{"t": 1016190, "seq": 20, "kind": "utterance", "state": "consolidated", "text": "Le scrutin est ouvert.", "source": "stt"}
+{"t": 1016190, "seq": 21, "kind": "ballot", "state": "consolidated", "text": "Scrutin ouvert", "canonical": {"acteur": "PA841351", "tribun": "841351", "amendement_uid": "AMANR5L17PO838901B2681P0D1N000245", "scrutin": null, "article": "D_Article_3", "groupe": null}, "source": "stt"}
+{"t": 1020670, "seq": 22, "kind": "utterance", "state": "consolidated", "text": "Le scrutin est clos.", "source": "stt"}
+{"t": 1024450, "seq": 23, "kind": "utterance", "state": "consolidated", "text": "Résultat du scrutin...", "source": "stt"}
+{"t": 1025490, "seq": 24, "kind": "utterance", "state": "consolidated", "text": "Un nombre de votants, 30 tous exprimés, majorité 16 pour, 10 contre 20.", "source": "stt"}
+{"t": 1029510, "seq": 25, "kind": "utterance", "state": "consolidated", "text": "La vérité que le recours à la généalogie génétique d'investigation et aux plateformes étrangères de tests ADN serait exceptionnel et n'aurait vocation à être utilisé qu'en dernier recours.", "source": "stt"}
+{"t": 1039210, "seq": 26, "kind": "utterance", "state": "consolidated", "text": "Pourtant, on ne retrouve pas cet engagement dans le texte.", "source": "stt"}
+{"t": 1042550, "seq": 27, "kind": "utterance", "state": "consolidated", "text": "Alors cet amendement a un objet simple.", "source": "stt"}
+{"t": 1044990, "seq": 28, "kind": "utterance", "state": "consolidated", "text": "Finalement, il rend service au gouvernement puisqu'il permet de rappeler avec clarté l'objectif que l'État s'est lui-même fixé dans l'étude d'impact.", "source": "stt"}
+{"t": 1053070, "seq": 29, "kind": "utterance", "state": "consolidated", "text": "le recours à la généalogie génétique d'un végétal.", "source": "stt"}
+{"t": 1055490, "seq": 30, "kind": "utterance", "state": "consolidated", "text": "ne peut être qu'exception de compromis qui permettra de rendre votre projet de loi plus acceptable aux yeux de ceux qui ont encore des doutes.", "source": "stt"}
+{"t": 1064090, "seq": 31, "kind": "utterance", "state": "consolidated", "text": "Merci. Madame la rapporteure, votre avis ?", "source": "stt"}
+{"t": 1066170, "seq": 32, "kind": "utterance", "state": "consolidated", "text": "Oui, merci Madame la Présidente. Madame la députée, votre amendement, moi, me semble totalement satisfait en réalité.", "source": "stt"}
+{"t": 1073370, "seq": 33, "kind": "utterance", "state": "consolidated", "text": "Les infractions qui sont concernées sont extrêmement graves. On parle de crimes sériels, de crimes non élucidés.", "source": "stt"}
+{"t": 1079730, "seq": 34, "kind": "utterance", "state": "consolidated", "text": "D'autre part, effectivement, c'est une technique employée à titre subsidiarie.", "source": "stt"}
+{"t": 1085490, "seq": 35, "kind": "utterance", "state": "consolidated", "text": "quand il n'y a absolument aucune piste d'auteur présumée.", "source": "stt"}
+{"t": 1089530, "seq": 36, "kind": "utterance", "state": "consolidated", "text": "Je pense que la rapporteur a raison, ça vient en effet redondant sur ce qui existe déjà dans le code,", "source": "stt"}
+{"t": 1093850, "seq": 37, "kind": "utterance", "state": "consolidated", "text": "mais moi personnellement, comme cela précise, quelque chose qui en effet est l'engagement du gouvernement,", "source": "stt"}
+{"t": 1099550, "seq": 38, "kind": "utterance", "state": "consolidated", "text": "si même la rapporteur me le permet, je donnerai un avis favorable.", "source": "stt"}
+{"t": 1102030, "seq": 39, "kind": "utterance", "state": "consolidated", "text": "Peut-être que dans la commission mixte paritaire, la précision légistique viendra ne pas rendre redondant le code de procédure pénale,", "source": "stt"}
+{"t": 1108590, "seq": 40, "kind": "utterance", "state": "consolidated", "text": "mais un avis favorable pour bien regarder l'objectif poursuivi par le Parlement.", "source": "stt"}
+{"t": 1111810, "seq": 41, "kind": "utterance", "state": "consolidated", "text": "Merci.", "source": "stt"}
+{"t": 1115490, "seq": 42, "kind": "utterance", "state": "consolidated", "text": "favorable de la Commission, favorable du Gouverneur.", "source": "stt"}
+{"t": 1117510, "seq": 43, "kind": "utterance", "state": "consolidated", "text": "Méthode d'enquête, ça a été dit et c'est partagé sur ces bancs,", "source": "stt"}
+{"t": 1121770, "seq": 44, "kind": "utterance", "state": "consolidated", "text": "sur le fait qu'elles sont assez intrusives et portent des risques", "source": "stt"}
+{"t": 1125950, "seq": 45, "kind": "utterance", "state": "consolidated", "text": "et donc qu'elles doivent être utilisées dans les bons cadres.", "source": "stt"}
+{"t": 1128850, "seq": 46, "kind": "utterance", "state": "consolidated", "text": "Je vous propose deux garde-fous assez simples.", "source": "stt"}
+{"t": 1131530, "seq": 47, "kind": "utterance", "state": "consolidated", "text": "Premièrement, réserver cette technique aux crimes les plus graves,", "source": "stt"}
+{"t": 1133990, "seq": 48, "kind": "utterance", "state": "consolidated", "text": "terrorisme, meurtre, crime sériel, cold case.", "source": "stt"}
+{"t": 1137950, "seq": 49, "kind": "utterance", "state": "consolidated", "text": "Et deuxièmement, imposer un véritable principe de subsidiarité.", "source": "stt"}
+{"t": 1140950, "seq": 50, "kind": "utterance", "state": "consolidated", "text": "On ne recourt à cette technique que lorsqu'aucune autre méthode,", "source": "stt"}
+{"t": 1143890, "seq": 51, "kind": "utterance", "state": "consolidated", "text": "moins attentatoires.", "source": "stt"}
+{"t": 1145490, "seq": 52, "kind": "utterance", "state": "consolidated", "text": "liberté et à la vie privée ne permet d'avancer et de brasser avec un spectre particulièrement large.", "source": "stt"}
+{"t": 1153170, "seq": 53, "kind": "utterance", "state": "consolidated", "text": "Le recours à l'examen des caractéristiques génétiques d'une personne doit rester subsidiaire,", "source": "stt"}
+{"t": 1158730, "seq": 54, "kind": "utterance", "state": "consolidated", "text": "doit en fait rester le seul moyen qui reste une fois qu'on a épuisé au préalable tous les autres.", "source": "stt"}
+{"t": 1165070, "seq": 55, "kind": "utterance", "state": "consolidated", "text": "Merci. 186, Madame Catala.", "source": "stt"}
+{"t": 1165070, "seq": 56, "kind": "speaker", "state": "consolidated", "text": "Mme Gabrielle Cathala", "canonical": {"acteur": "PA842187", "tribun": "842187", "amendement_uid": null, "scrutin": null, "article": null, "groupe": "PO845413"}, "source": "stt", "call": false, "heard": "Madame Catala", "groupe_label": "La France insoumise - Nouveau Front Populaire"}
+{"t": 1168450, "seq": 57, "kind": "utterance", "state": "consolidated", "text": "Merci Madame la Présidente. Dans la même logique, c'est un amendement de repli pour éviter", "source": "stt"}
+{"t": 1175110, "seq": 58, "kind": "utterance", "state": "consolidated", "text": "Sous-titrage Société Radio-Canada", "source": "stt"}
+{"t": 1175490, "seq": 59, "kind": "utterance", "state": "consolidated", "text": "que cette technique...", "source": "stt"}
+{"t": 1177490, "seq": 60, "kind": "utterance", "state": "consolidated", "text": "Notamment sur l'identification de cadavres.", "source": "stt"}
+{"t": 1180390, "seq": 61, "kind": "utterance", "state": "consolidated", "text": "Parfois, nous n'avons pas du tout de piste,", "source": "stt"}
+{"t": 1183030, "seq": 62, "kind": "utterance", "state": "consolidated", "text": "nous ne connaissons pas les personnes qui sont décédées,", "source": "stt"}
+{"t": 1185250, "seq": 63, "kind": "utterance", "state": "consolidated", "text": "et ça permet notamment des cadavres carbonisés,", "source": "stt"}
+{"t": 1188650, "seq": 64, "kind": "utterance", "state": "consolidated", "text": "et ça nous permet juste d'avoir une orientation d'enquête.", "source": "stt"}
+{"t": 1191810, "seq": 65, "kind": "utterance", "state": "consolidated", "text": "Donc, avis défavorable.", "source": "stt"}
+{"t": 1195020, "seq": 66, "kind": "utterance", "state": "consolidated", "text": "Monsieur le ministre ?", "source": "stt"}
+{"t": 1196900, "seq": 67, "kind": "utterance", "state": "consolidated", "text": "Même avis.", "source": "stt"}
+{"t": 1197800, "seq": 68, "kind": "utterance", "state": "consolidated", "text": "Donc, je les mets aux voix successivement,", "source": "stt"}
+{"t": 1197800, "seq": 69, "kind": "ballot", "state": "consolidated", "text": "Mise aux voix", "canonical": {"acteur": "PA841351", "tribun": "841351", "amendement_uid": "AMANR5L17PO838901B2681P0D1N000245", "scrutin": null, "article": "D_Article_3", "groupe": null}, "source": "stt"}
+{"t": 1199800, "seq": 70, "kind": "utterance", "state": "consolidated", "text": "celui de monsieur Duplessis, le 246, double avis défavorable.", "source": "stt"}
+{"t": 1203080, "seq": 71, "kind": "utterance", "state": "consolidated", "text": "Qui est pour ? Qui est contre ?", "source": "stt"}
+{"t": 1205760, "seq": 72, "kind": "utterance", "state": "consolidated", "text": "Il est rejeté. 75 et identique de...", "source": "stt"}
+{"t": 1205760, "seq": 73, "kind": "ballot", "state": "consolidated", "text": "Rejeté", "canonical": {"acteur": "PA841351", "tribun": "841351", "amendement_uid": "AMANR5L17PO838901B2681P0D1N000245", "scrutin": null, "article": "D_Article_3", "groupe": null}, "source": "stt"}
+{"t": 1209580, "seq": 74, "kind": "utterance", "state": "consolidated", "text": "C'est juste un amendement de précision sur les finalités du recours à la généalogie génétique.", "source": "stt"}
+{"t": 1222970, "seq": 75, "kind": "utterance", "state": "consolidated", "text": "Une ministre.", "source": "stt"}
+{"t": 1224630, "seq": 76, "kind": "utterance", "state": "consolidated", "text": "Double avis favorable. Qui est pour ?", "source": "stt"}
+{"t": 1227070, "seq": 77, "kind": "utterance", "state": "consolidated", "text": "Qui est contre ?", "source": "stt"}
+{"t": 1230330, "seq": 78, "kind": "utterance", "state": "consolidated", "text": "Il est adopté. Sur le suivant, le 247, il y a une demande de scrutin public par le groupe LFI, NFI.", "source": "stt"}
+{"t": 1230330, "seq": 79, "kind": "amendment", "state": "consolidated", "text": "Adt n° 247 de M. DUPLESSY (scrutin public)", "canonical": {"acteur": "PA841351", "tribun": "841351", "amendement_uid": "AMANR5L17PO838901B2681P0D1N000247", "scrutin": null, "article": "D_Article_3", "groupe": null}, "source": "stt"}
+{"t": 1230330, "seq": 80, "kind": "ballot", "state": "consolidated", "text": "Adopté", "canonical": {"acteur": "PA841351", "tribun": "841351", "amendement_uid": "AMANR5L17PO838901B2681P0D1N000247", "scrutin": null, "article": "D_Article_3", "groupe": null}, "source": "stt"}
+{"t": 1235490, "seq": 81, "kind": "utterance", "state": "consolidated", "text": "Monsieur Duplessis pour le présenter.", "source": "stt"}
+{"t": 1240470, "seq": 82, "kind": "utterance", "state": "consolidated", "text": "Oui, cet amendement reprend une recommandation très claire du Conseil d'Etat sur la question des infractions terroristes.", "source": "stt"}
+{"t": 1248010, "seq": 83, "kind": "utterance", "state": "consolidated", "text": "Le Conseil d'Etat relève que l'étude d'impact de votre propre projet ne montre pas la nécessité d'étendre les outils d'enquête génétiques sur ce champ-là.", "source": "stt"}
+{"t": 1259690, "seq": 84, "kind": "utterance", "state": "consolidated", "text": "Et donc on vous propose de ne pas ouvrir cette voie.", "source": "stt"}
+{"t": 1262890, "seq": 85, "kind": "utterance", "state": "consolidated", "text": "Madame la rapporteure ? Monsieur le ministre ?", "source": "stt"}
+{"t": 1265490, "seq": 86, "kind": "utterance", "state": "consolidated", "text": "Double avis défavorable, scrutin public. Le scrutin est clos. Résultat du scrutin, nombre de votants 40, tous exprimés, majorité 21 pour 16, compte 24. L'Assemblée n'a pas adopté.", "source": "stt"}
+{"t": 1265490, "seq": 87, "kind": "amendment", "state": "consolidated", "text": "Adt n° 21 de Mme K/BIDI", "canonical": {"acteur": "PA795998", "tribun": "795998", "amendement_uid": "AMANR5L17PO838901B2681P0D1N000021", "scrutin": null, "article": "D_Article_12", "groupe": null}, "source": "stt"}
+{"t": 1265490, "seq": 88, "kind": "amendment", "state": "consolidated", "text": "Adt n° 16 de M. COULOMME", "canonical": {"acteur": "PA795136", "tribun": "795136", "amendement_uid": "AMANR5L17PO838901BTC2908P0D1N000016", "scrutin": null, "article": "D_Article_1er", "groupe": null}, "source": "stt"}
+{"t": 1265490, "seq": 89, "kind": "amendment", "state": "consolidated", "text": "Adt n° 24 de M. MOLAC", "canonical": {"acteur": "PA607619", "tribun": "607619", "amendement_uid": "AMANR5L17PO838901BTC2908P0D1N000024", "scrutin": null, "article": "D_Article_1er", "groupe": null}, "source": "stt"}
+{"t": 1279150, "seq": 90, "kind": "utterance", "state": "consolidated", "text": "289, Madame la rapporteure. Monsieur le ministre. Double avis favorable qui est pour, qui est contre. Il est adopté. 290, Madame la rapporteure.", "source": "stt"}
+{"t": 1279150, "seq": 91, "kind": "ballot", "state": "consolidated", "text": "Adopté", "canonical": {"acteur": "PA607619", "tribun": "607619", "amendement_uid": "AMANR5L17PO838901BTC2908P0D1N000024", "scrutin": null, "article": "D_Article_1er", "groupe": null}, "source": "stt"}
+{"t": 1292370, "seq": 92, "kind": "utterance", "state": "consolidated", "text": "C'est un amendement de précision, Madame la présidente. Monsieur le ministre.", "source": "stt"}
+{"t": 1295490, "seq": 93, "kind": "utterance", "state": "consolidated", "text": "Double avis favorable qui est pour.", "source": "stt"}
+{"t": 1297410, "seq": 94, "kind": "utterance", "state": "consolidated", "text": "Porteur.", "source": "stt"}
+{"t": 1305470, "seq": 95, "kind": "utterance", "state": "consolidated", "text": "Monsieur le ministre.", "source": "stt"}
+{"t": 1307610, "seq": 96, "kind": "utterance", "state": "consolidated", "text": "Double avis favorable qui est pour.", "source": "stt"}
+{"t": 1310190, "seq": 97, "kind": "utterance", "state": "consolidated", "text": "Qui est contre.", "source": "stt"}
+{"t": 1311510, "seq": 98, "kind": "utterance", "state": "consolidated", "text": "Il est adopté sur les 76 et identiques à venir.", "source": "stt"}
+{"t": 1311510, "seq": 99, "kind": "ballot", "state": "consolidated", "text": "Adopté", "canonical": {"acteur": "PA607619", "tribun": "607619", "amendement_uid": "AMANR5L17PO838901BTC2908P0D1N000024", "scrutin": null, "article": "D_Article_1er", "groupe": null}, "source": "stt"}
+{"t": 1314870, "seq": 100, "kind": "utterance", "state": "consolidated", "text": "Demande de scrutin public par le groupe LFINFP.", "source": "stt"}
+{"t": 1317570, "seq": 101, "kind": "utterance", "state": "consolidated", "text": "Ensuite sur les 77 et identiques à venir.", "source": "stt"}
+{"t": 1320930, "seq": 102, "kind": "utterance", "state": "consolidated", "text": "76, madame Capdeviel.", "source": "stt"}
+{"t": 1320930, "seq": 103, "kind": "speaker", "state": "consolidated", "text": "Mme Colette Capdevielle", "canonical": {"acteur": "PA608264", "tribun": "608264", "amendement_uid": null, "scrutin": null, "article": null, "groupe": "PO845419"}, "source": "stt", "call": false, "heard": "madame Capdeviel", "groupe_label": "Socialistes et apparentés"}
+{"t": 1323730, "seq": 104, "kind": "utterance", "state": "consolidated", "text": "Il est défendu.", "source": "stt"}
+{"t": 1325790, "seq": 105, "kind": "utterance", "state": "consolidated", "text": "L'identique, Madame Catala, le 183.", "source": "stt"}
+{"t": 1325790, "seq": 106, "kind": "speaker", "state": "consolidated", "text": "Mme Gabrielle Cathala", "canonical": {"acteur": "PA842187", "tribun": "842187", "amendement_uid": null, "scrutin": null, "article": null, "groupe": "PO845413"}, "source": "stt", "call": false, "heard": "Madame Catala", "groupe_label": "La France insoumise - Nouveau Front Populaire"}
+{"t": 1329450, "seq": 107, "kind": "utterance", "state": "consolidated", "text": "Légal actuel.", "source": "stt"}
+{"t": 1332090, "seq": 108, "kind": "utterance", "state": "consolidated", "text": "En France, l'examen des caractéristiques génétiques dites constitutionnelles d'une personne", "source": "stt"}
+{"t": 1338250, "seq": 109, "kind": "utterance", "state": "consolidated", "text": "est interdite en dehors du cadre médical actuellement ou de la recherche scientifique.", "source": "stt"}
+{"t": 1344950, "seq": 110, "kind": "utterance", "state": "consolidated", "text": "Et même dans ce cadre, l'examen ne peut pas être exercé, fait,", "source": "stt"}
+{"t": 1350570, "seq": 111, "kind": "utterance", "state": "consolidated", "text": "sans le consentement explicite de la personne, à la seule exception.", "source": "stt"}
+{"t": 1354630, "seq": 112, "kind": "utterance", "state": "consolidated", "text": "la seule exception", "source": "stt"}
+{"t": 1355490, "seq": 113, "kind": "utterance", "state": "consolidated", "text": "qui existe étant le dopage.", "source": "stt"}
+{"t": 1358210, "seq": 114, "kind": "utterance", "state": "consolidated", "text": "C'est pour ça que la CNIL a essayé de suggérer un garde-fou", "source": "stt"}
+{"t": 1364090, "seq": 115, "kind": "utterance", "state": "consolidated", "text": "pour que le consentement de la personne soit mieux explicité.", "source": "stt"}
+{"t": 1368410, "seq": 116, "kind": "utterance", "state": "consolidated", "text": "Donc là, c'est qu'un amendement de repli", "source": "stt"}
+{"t": 1370630, "seq": 117, "kind": "utterance", "state": "consolidated", "text": "que je vous invite toutes et tous à voter", "source": "stt"}
+{"t": 1372830, "seq": 118, "kind": "utterance", "state": "consolidated", "text": "si vous êtes de bonne foi.", "source": "stt"}
+{"t": 1375450, "seq": 119, "kind": "utterance", "state": "consolidated", "text": "Madame la rapporteure ?", "source": "stt"}
+{"t": 1376210, "seq": 120, "kind": "utterance", "state": "consolidated", "text": "Monsieur le ministre ?", "source": "stt"}
+{"t": 1378870, "seq": 121, "kind": "utterance", "state": "consolidated", "text": "Double avis défavorable, scrutin public, le scrutin est ouvert.", "source": "stt"}
+{"t": 1378870, "seq": 122, "kind": "ballot", "state": "consolidated", "text": "Scrutin ouvert", "canonical": {"acteur": "PA607619", "tribun": "607619", "amendement_uid": "AMANR5L17PO838901BTC2908P0D1N000024", "scrutin": null, "article": "D_Article_1er", "groupe": null}, "source": "stt"}
+{"t": 1386400, "seq": 123, "kind": "utterance", "state": "consolidated", "text": "Le scrutin est clos.", "source": "stt"}
+{"t": 1389520, "seq": 124, "kind": "utterance", "state": "consolidated", "text": "Double avis favorable.", "source": "stt"}
+{"t": 1390960, "seq": 125, "kind": "utterance", "state": "consolidated", "text": "Qui est pour ?", "source": "stt"}
+{"t": 1392500, "seq": 126, "kind": "utterance", "state": "consolidated", "text": "Qui est contre ?", "source": "stt"}
+{"t": 1393840, "seq": 127, "kind": "utterance", "state": "consolidated", "text": "Il est adopté de nouveaux identiques.", "source": "stt"}
+{"t": 1393840, "seq": 128, "kind": "ballot", "state": "consolidated", "text": "Adopté", "canonical": {"acteur": "PA607619", "tribun": "607619", "amendement_uid": "AMANR5L17PO838901BTC2908P0D1N000024", "scrutin": null, "article": "D_Article_1er", "groupe": null}, "source": "stt"}
+{"t": 1396200, "seq": 129, "kind": "utterance", "state": "consolidated", "text": "Madame Capdeviel, le 77.", "source": "stt"}
+{"t": 1396200, "seq": 130, "kind": "speaker", "state": "consolidated", "text": "Mme Colette Capdevielle", "canonical": {"acteur": "PA608264", "tribun": "608264", "amendement_uid": null, "scrutin": null, "article": null, "groupe": "PO845419"}, "source": "stt", "call": false, "heard": "Madame Capdeviel", "groupe_label": "Socialistes et apparentés"}
+{"t": 1399500, "seq": 131, "kind": "utterance", "state": "consolidated", "text": "Oui.", "source": "stt"}
+{"t": 1400740, "seq": 132, "kind": "utterance", "state": "consolidated", "text": "Après le consentement libre, spécifique et éclairé,", "source": "stt"}
+{"t": 1406380, "seq": 133, "kind": "utterance", "state": "consolidated", "text": "tel que préconisé par la CNIL,", "source": "stt"}
+{"t": 1409460, "seq": 134, "kind": "utterance", "state": "consolidated", "text": "la même CNIL a proposé de préciser", "source": "stt"}
+{"t": 1411980, "seq": 135, "kind": "utterance", "state": "consolidated", "text": "les catégories de bases de données génétiques étrangères", "source": "stt"}
+{"t": 1415240, "seq": 136, "kind": "utterance", "state": "consolidated", "text": "qui a...", "source": "stt"}
+{"t": 1415490, "seq": 137, "kind": "utterance", "state": "consolidated", "text": "qui devait être exclue du dispositif.", "source": "stt"}
+{"t": 1417490, "seq": 138, "kind": "utterance", "state": "consolidated", "text": "...dépendante, compétente sur la protection des données personnelles,", "source": "stt"}
+{"t": 1423750, "seq": 139, "kind": "utterance", "state": "consolidated", "text": "et même ça, vous ne le votez pas.", "source": "stt"}
+{"t": 1425610, "seq": 140, "kind": "utterance", "state": "consolidated", "text": "Alors on s'est habitués, puisque quand la défenseur des droits suggère quelque chose,", "source": "stt"}
+{"t": 1428710, "seq": 141, "kind": "utterance", "state": "consolidated", "text": "vous ne le votez pas.", "source": "stt"}
+{"t": 1429790, "seq": 142, "kind": "utterance", "state": "consolidated", "text": "Quand la CNCDH suggère des modifications, vous ne les écoutez pas.", "source": "stt"}
+{"t": 1433810, "seq": 143, "kind": "utterance", "state": "consolidated", "text": "Là, la CNIL a rendu un avis très sévère sur cet article 3,", "source": "stt"}
+{"t": 1437550, "seq": 144, "kind": "utterance", "state": "consolidated", "text": "et vous n'en avez rien à faire.", "source": "stt"}
+{"t": 1440250, "seq": 145, "kind": "utterance", "state": "consolidated", "text": "Et ensuite, hier soir, vous nous donniez des leçons de droit humain,", "source": "stt"}
+{"t": 1443690, "seq": 146, "kind": "utterance", "state": "consolidated", "text": "mais de démocratie", "source": "stt"}
+{"t": 1445490, "seq": 147, "kind": "utterance", "state": "consolidated", "text": "de démocratie et vous ne respectez", "source": "stt"}
+{"t": 1447610, "seq": 148, "kind": "utterance", "state": "consolidated", "text": "même pas...", "source": "stt"}
+{"t": 1448930, "seq": 149, "kind": "utterance", "state": "consolidated", "text": "Oui, merci Madame la Présidente.", "source": "stt"}
+{"t": 1452590, "seq": 150, "kind": "utterance", "state": "consolidated", "text": "Donc vous n'avez pas", "source": "stt"}
+{"t": 1453550, "seq": 151, "kind": "utterance", "state": "consolidated", "text": "défendu effectivement votre amendement.", "source": "stt"}
+{"t": 1455370, "seq": 152, "kind": "utterance", "state": "consolidated", "text": "Par contre, je rejoins", "source": "stt"}
+{"t": 1457190, "seq": 153, "kind": "utterance", "state": "consolidated", "text": "Madame Capdeviel. Je trouve que c'est une précision", "source": "stt"}
+{"t": 1457190, "seq": 154, "kind": "speaker", "state": "consolidated", "text": "Mme Colette Capdevielle", "canonical": {"acteur": "PA608264", "tribun": "608264", "amendement_uid": null, "scrutin": null, "article": null, "groupe": "PO845419"}, "source": "stt", "call": false, "heard": "Madame Capdeviel", "groupe_label": "Socialistes et apparentés"}
+{"t": 1459090, "seq": 155, "kind": "utterance", "state": "consolidated", "text": "utile. Donc avis favorable.", "source": "stt"}
+{"t": 1462010, "seq": 156, "kind": "utterance", "state": "consolidated", "text": "Merci.", "source": "stt"}
+{"t": 1463610, "seq": 157, "kind": "utterance", "state": "consolidated", "text": "Monsieur le Ministre.", "source": "stt"}
+{"t": 1465570, "seq": 158, "kind": "utterance", "state": "consolidated", "text": "Favorable également.", "source": "stt"}
+{"t": 1467430, "seq": 159, "kind": "utterance", "state": "consolidated", "text": "Madame Capdeviel,", "source": "stt"}
+{"t": 1467430, "seq": 160, "kind": "speaker", "state": "consolidated", "text": "Mme Colette Capdevielle", "canonical": {"acteur": "PA608264", "tribun": "608264", "amendement_uid": null, "scrutin": null, "article": null, "groupe": "PO845419"}, "source": "stt", "call": false, "heard": "Madame Capdeviel", "groupe_label": "Socialistes et apparentés"}
+{"t": 1469110, "seq": 161, "kind": "utterance", "state": "consolidated", "text": "vous vouliez reprendre la parole ?", "source": "stt"}
+{"t": 1471030, "seq": 162, "kind": "utterance", "state": "consolidated", "text": "Je remercie Madame la rapporteure", "source": "stt"}
+{"t": 1473290, "seq": 163, "kind": "utterance", "state": "consolidated", "text": "d'avoir effectivement réservé", "source": "stt"}
+{"t": 1475030, "seq": 164, "kind": "utterance", "state": "consolidated", "text": "à la vie.", "source": "stt"}
+{"t": 1475490, "seq": 165, "kind": "utterance", "state": "consolidated", "text": "Je précise quand même pour les collègues qui...", "source": "stt"}
+{"t": 1478970, "seq": 166, "kind": "utterance", "state": "consolidated", "text": "Merci Madame la Présidente.", "source": "stt"}
+{"t": 1480930, "seq": 167, "kind": "utterance", "state": "consolidated", "text": "L'amendement précise la condition de subsidiarité pour la mise en oeuvre de la généalogie génétique d'investigation.", "source": "stt"}
+{"t": 1487450, "seq": 168, "kind": "utterance", "state": "consolidated", "text": "Il avait été adopté par la Commission des lois.", "source": "stt"}
+{"t": 1490570, "seq": 169, "kind": "utterance", "state": "consolidated", "text": "Monsieur le Ministre.", "source": "stt"}
+{"t": 1492650, "seq": 170, "kind": "utterance", "state": "consolidated", "text": "Double avis favorable.", "source": "stt"}
+{"t": 1494130, "seq": 171, "kind": "utterance", "state": "consolidated", "text": "Qui est pour ?", "source": "stt"}
+{"t": 1497450, "seq": 172, "kind": "utterance", "state": "consolidated", "text": "Qui est contre ?", "source": "stt"}
+{"t": 1498930, "seq": 173, "kind": "utterance", "state": "consolidated", "text": "Il est adopté.", "source": "stt"}
+{"t": 1498930, "seq": 174, "kind": "ballot", "state": "consolidated", "text": "Adopté", "canonical": {"acteur": "PA607619", "tribun": "607619", "amendement_uid": "AMANR5L17PO838901BTC2908P0D1N000024", "scrutin": null, "article": "D_Article_1er", "groupe": null}, "source": "stt"}
+{"t": 1500510, "seq": 175, "kind": "utterance", "state": "consolidated", "text": "248, Monsieur Duplessis.", "source": "stt"}
+{"t": 1504310, "seq": 176, "kind": "utterance", "state": "consolidated", "text": "Madame la Présidente.", "source": "stt"}
+{"t": 1505490, "seq": 177, "kind": "utterance", "state": "consolidated", "text": "On a l'idée que plus un dispositif est intrusif et potentiellement délivré, les bases consultées, les difficultés rencontrées puissent être remontées à la CNIL afin d'avoir un suivi et potentiellement une évaluation de cette nouvelle technique d'enquête.", "source": "stt"}
+{"t": 1522930, "seq": 178, "kind": "utterance", "state": "consolidated", "text": "Merci Madame la rapporteure, votre avis ?", "source": "stt"}
+{"t": 1525490, "seq": 179, "kind": "utterance", "state": "consolidated", "text": "Oui, merci Madame la Présidente. C'est un amendement qui avait été adopté par la Commission. A titre personnel, je suis plus réservée. Donc à titre personnel, j'ai mis un avis défavorable.", "source": "stt"}
+{"t": 1534890, "seq": 180, "kind": "utterance", "state": "consolidated", "text": "Merci.", "source": "stt"}
+{"t": 1535490, "seq": 181, "kind": "utterance", "state": "consolidated", "text": "Monsieur le ministre.", "source": "stt"}
+{"t": 1536490, "seq": 182, "kind": "utterance", "state": "consolidated", "text": "La même chose.", "source": "stt"}
+{"t": 1538610, "seq": 183, "kind": "utterance", "state": "consolidated", "text": "Il faut noter une préoccupante dérive sécuritaire", "source": "stt"}
+{"t": 1541250, "seq": 184, "kind": "utterance", "state": "consolidated", "text": "présentée comme légitimement le fichage de données individuelles identifiantes.", "source": "stt"}
+{"t": 1546590, "seq": 185, "kind": "utterance", "state": "consolidated", "text": "Alors si vous ne voulez pas écouter le syndicat de la magistrature", "source": "stt"}
+{"t": 1551210, "seq": 186, "kind": "utterance", "state": "consolidated", "text": "parce que dans votre référentiel ce sont des juges rouges", "source": "stt"}
+{"t": 1554950, "seq": 187, "kind": "utterance", "state": "consolidated", "text": "et donc quand ils disent que c'est une stratégie d'extension continue", "source": "stt"}
+{"t": 1558830, "seq": 188, "kind": "utterance", "state": "consolidated", "text": "de fichage judiciaire, ça ne vous intéresse pas.", "source": "stt"}
+{"t": 1561310, "seq": 189, "kind": "utterance", "state": "consolidated", "text": "Écoutez au moins l'INTERM et la CNIL.", "source": "stt"}
+{"t": 1564650, "seq": 190, "kind": "utterance", "state": "consolidated", "text": "Merci.", "source": "stt"}
+{"t": 1565490, "seq": 191, "kind": "utterance", "state": "consolidated", "text": "Donc on vote, c'est un scrutin public, avis favorable de la commission mais défavorable.", "source": "stt"}
+{"t": 1570950, "seq": 192, "kind": "utterance", "state": "consolidated", "text": "Le scrutin est clos.", "source": "stt"}
+{"t": 1575320, "seq": 193, "kind": "utterance", "state": "consolidated", "text": "Résultat du scrutin, votant 48, exprimé 47, majorité 24 pour 20, contre 27.", "source": "stt"}
+{"t": 1575320, "seq": 194, "kind": "amendment", "state": "consolidated", "text": "Adt n° 20 de Mme K/BIDI", "canonical": {"acteur": "PA795998", "tribun": "795998", "amendement_uid": "AMANR5L17PO838901B2681P0D1N000020", "scrutin": null, "article": "D_Article_12", "groupe": null}, "source": "stt"}
+{"t": 1575320, "seq": 195, "kind": "amendment", "state": "consolidated", "text": "Adt n° 27 de Mme BALAGE EL MARIKY", "canonical": {"acteur": "PA841701", "tribun": "841701", "amendement_uid": "AMANR5L17PO838901BTC2908P0D1N000027", "scrutin": null, "article": "D_Article_1er", "groupe": null}, "source": "stt"}
+{"t": 1580840, "seq": 196, "kind": "utterance", "state": "consolidated", "text": "L'Assemblée n'a pas adopté.", "source": "stt"}
+{"t": 1582560, "seq": 197, "kind": "utterance", "state": "consolidated", "text": "Le 249, M. Duplessis.", "source": "stt"}
+{"t": 1586760, "seq": 198, "kind": "utterance", "state": "consolidated", "text": "Oui, merci Madame la Présidente.", "source": "stt"}
+{"t": 1589920, "seq": 199, "kind": "utterance", "state": "consolidated", "text": "Donc ça a été dit, ce dispositif à la fois il est attentatoire ou en tout cas potentiel.", "source": "stt"}
+{"t": 1595490, "seq": 200, "kind": "utterance", "state": "consolidated", "text": "attentatoire à la protection d'IP. Et donc, si le texte prévoit déjà, et c'est fort pertinent, que la CNIL soit consultée avant l'adoption du décret d'application,", "source": "stt"}
+{"t": 1607510, "seq": 201, "kind": "utterance", "state": "consolidated", "text": "cet amendement propose que le CCNE, le Comité Consultatif National d'Éthique, soit aussi consulté, puisque c'est bien sur ces deux champs", "source": "stt"}
+{"t": 1619130, "seq": 202, "kind": "utterance", "state": "consolidated", "text": "qu'intervient, en tout cas qu'à des effets, la disposition proposée.", "source": "stt"}
+{"t": 1623690, "seq": 203, "kind": "utterance", "state": "consolidated", "text": "Merci, madame la rapporteure.", "source": "stt"}
+{"t": 1625490, "seq": 204, "kind": "utterance", "state": "consolidated", "text": "Votre avis ?", "source": "stt"}
+{"t": 1627490, "seq": 205, "kind": "utterance", "state": "consolidated", "text": "Oui, merci Madame la Présidente.", "source": "stt"}
+{"t": 1629470, "seq": 206, "kind": "utterance", "state": "consolidated", "text": "Leur libéralisation, c'est bien que c'est l'ensemble des marqueurs qui sont indiqués dans ces tests", "source": "stt"}
+{"t": 1638710, "seq": 207, "kind": "utterance", "state": "consolidated", "text": "qui interrogent les marqueurs génétiques, leur utilisation, mais aussi leur révélation,", "source": "stt"}
+{"t": 1643570, "seq": 208, "kind": "utterance", "state": "consolidated", "text": "puisque ces tests génétiques, s'ils sont utilisés dans les services d'enquête,", "source": "stt"}
+{"t": 1648230, "seq": 209, "kind": "utterance", "state": "consolidated", "text": "pourraient révéler des liens de parentalité.", "source": "stt"}
+{"t": 1650870, "seq": 210, "kind": "utterance", "state": "consolidated", "text": "Est-ce que nous sommes assez robustes ?", "source": "stt"}
+{"t": 1655490, "seq": 211, "kind": "utterance", "state": "consolidated", "text": "pour accompagner celles et ceux qui pourront...", "source": "stt"}
+{"t": 1657550, "seq": 212, "kind": "utterance", "state": "consolidated", "text": "Qui est contre ?", "source": "stt"}
+{"t": 1658490, "seq": 213, "kind": "utterance", "state": "consolidated", "text": "Il est rejeté. Je vous annonce que sur", "source": "stt"}
+{"t": 1658490, "seq": 214, "kind": "ballot", "state": "consolidated", "text": "Rejeté", "canonical": {"acteur": "PA841701", "tribun": "841701", "amendement_uid": "AMANR5L17PO838901BTC2908P0D1N000027", "scrutin": null, "article": "D_Article_1er", "groupe": null}, "source": "stt"}
+{"t": 1661330, "seq": 215, "kind": "utterance", "state": "consolidated", "text": "l'amendement 78,", "source": "stt"}
+{"t": 1661330, "seq": 216, "kind": "amendment", "state": "consolidated", "text": "Adt n° 78 de Mme CAPDEVIELLE (scrutin public)", "canonical": {"acteur": "PA608264", "tribun": "608264", "amendement_uid": "AMANR5L17PO838901B2681P0D1N000078", "scrutin": null, "article": "D_Article_3", "groupe": null}, "source": "stt"}
+{"t": 1663590, "seq": 217, "kind": "utterance", "state": "consolidated", "text": "le groupe LFINFP a demandé un scrutin", "source": "stt"}
+{"t": 1665530, "seq": 218, "kind": "utterance", "state": "consolidated", "text": "public, ainsi que sur l'article", "source": "stt"}
+{"t": 1667450, "seq": 219, "kind": "utterance", "state": "consolidated", "text": "3 dans son ensemble, et sur", "source": "stt"}
+{"t": 1669590, "seq": 220, "kind": "utterance", "state": "consolidated", "text": "l'amendement 189.", "source": "stt"}
+{"t": 1669590, "seq": 221, "kind": "amendment", "state": "consolidated", "text": "Adt n° 189 de Mme CATHALA (scrutin public)", "canonical": {"acteur": "PA842187", "tribun": "842187", "amendement_uid": "AMANR5L17PO838901B2681P0D1N000189", "scrutin": null, "article": "D_Article_3", "groupe": null}, "source": "stt"}
+{"t": 1671510, "seq": 222, "kind": "utterance", "state": "consolidated", "text": "Amendement 294, Madame la rapporteure.", "source": "stt"}
+{"t": 1671510, "seq": 223, "kind": "amendment", "state": "consolidated", "text": "Adt n° 294 de Mme BERGANTZ", "canonical": {"acteur": "PA805166", "tribun": "805166", "amendement_uid": "AMANR5L17PO838901B2681P0D1N000294", "scrutin": null, "article": "D_Article_3", "groupe": null}, "source": "stt"}
+{"t": 1674010, "seq": 224, "kind": "utterance", "state": "consolidated", "text": "Oui, merci Madame la Présidente.", "source": "stt"}
+{"t": 1675310, "seq": 225, "kind": "utterance", "state": "consolidated", "text": "C'est un amendement qui précise le champ", "source": "stt"}
+{"t": 1677370, "seq": 226, "kind": "utterance", "state": "consolidated", "text": "du décret en Conseil d'Etat aux conditions", "source": "stt"}
+{"t": 1679330, "seq": 227, "kind": "utterance", "state": "consolidated", "text": "de sélection des bases de données et des modalités de garantie", "source": "stt"}
+{"t": 1681750, "seq": 228, "kind": "utterance", "state": "consolidated", "text": "de l'effacement des données génétiques.", "source": "stt"}
+{"t": 1684650, "seq": 229, "kind": "utterance", "state": "consolidated", "text": "Monsieur le Ministre.", "source": "stt"}
+{"t": 1687490, "seq": 230, "kind": "utterance", "state": "consolidated", "text": "Double avis favorable qui est pour ?", "source": "stt"}
+{"t": 1689450, "seq": 231, "kind": "utterance", "state": "consolidated", "text": "On qui suit l'avis de la CNIL qui a relevé que les sociétés commerciales de droit privé qui proposent des tests génétiques récréatifs apportent des garanties assez variables", "source": "stt"}
+{"t": 1700250, "seq": 232, "kind": "utterance", "state": "consolidated", "text": "quant à la qualité des analyses réalisées et surtout la fiabilité des résultats obtenus.", "source": "stt"}
+{"t": 1707210, "seq": 233, "kind": "utterance", "state": "consolidated", "text": "Donc la CNIL a proposé que la qualité des analyses et des traitements opérés constitue véritablement le critère de sélection des bases susceptibles d'être utilisées dans le cadre du dispositif.", "source": "stt"}
+{"t": 1715490, "seq": 234, "kind": "utterance", "state": "consolidated", "text": "Donc on...", "source": "stt"}
+{"t": 1745490, "seq": 235, "kind": "utterance", "state": "consolidated", "text": "Ah non, vous n'êtes pas signataire du tout. Nous en arrivons donc au vote de l'article 3 par scrutin public. Je vous laisse regagner vos places. Le scrutin est ouvert. Le scrutin est clos. Résultat du scrutin. Votant 58. Tous exprimés. Majorité 30 pour 35 contre 23. L'Assemblée a adopté.", "source": "stt"}
+{"t": 1745490, "seq": 236, "kind": "amendment", "state": "consolidated", "text": "Adt n° 30 de Mme JOSSERAND", "canonical": {"acteur": "PA841075", "tribun": "841075", "amendement_uid": "AMANR5L17PO838901BTC2908P0D1N000030", "scrutin": null, "article": "D_Article_1er", "groupe": null}, "source": "stt"}
+{"t": 1745490, "seq": 237, "kind": "amendment", "state": "consolidated", "text": "Adt n° 23 de Mme MILLER", "canonical": {"acteur": "PA817203", "tribun": "817203", "amendement_uid": "AMANR5L17PO838901BTC2908P0D1N000023", "scrutin": null, "article": "D_Article_1er_bis", "groupe": null}, "source": "stt"}
+{"t": 1745490, "seq": 238, "kind": "ballot", "state": "consolidated", "text": "Scrutin ouvert", "canonical": {"acteur": "PA817203", "tribun": "817203", "amendement_uid": "AMANR5L17PO838901BTC2908P0D1N000023", "scrutin": null, "article": "D_Article_1er_bis", "groupe": null}, "source": "stt"}
+{"t": 1775490, "seq": 239, "kind": "utterance", "state": "consolidated", "text": "Nous avons des additionnels.", "source": "stt"}
+{"t": 1805490, "seq": 240, "kind": "utterance", "state": "consolidated", "text": "S'il vous plaît, votez cet amendement. C'est vraiment un amendement de fichier. Ne soit pas éternel. Je vous rappelle encore, ça a déjà été dit plusieurs fois par mes collègues, la CNIL s'oppose fermement à l'ensemble de l'article 3.", "source": "stt"}
+{"t": 1819350, "seq": 241, "kind": "utterance", "state": "consolidated", "text": "Donc là il a été voté cet article 3, alors au moins préservons quand même la vie des gens et ne faisons pas de notre pays un pays qui verse un peu sur l'autoritarisme.", "source": "stt"}
+{"t": 1835490, "seq": 242, "kind": "utterance", "state": "consolidated", "text": "Tout le monde va être fichier.", "source": "stt"}
+{"t": 1837450, "seq": 243, "kind": "utterance", "state": "consolidated", "text": "... de 20 ans, avis défavorable.", "source": "stt"}
+{"t": 1842290, "seq": 244, "kind": "utterance", "state": "consolidated", "text": "Double avis défavorable, scrutin public.", "source": "stt"}
+{"t": 1844870, "seq": 245, "kind": "utterance", "state": "consolidated", "text": "Le scrutin est ouvert.", "source": "stt"}
+{"t": 1844870, "seq": 246, "kind": "ballot", "state": "consolidated", "text": "Scrutin ouvert", "canonical": {"acteur": "PA817203", "tribun": "817203", "amendement_uid": "AMANR5L17PO838901BTC2908P0D1N000023", "scrutin": null, "article": "D_Article_1er_bis", "groupe": null}, "source": "stt"}
+{"t": 1854260, "seq": 247, "kind": "utterance", "state": "consolidated", "text": "Le scrutin est clos.", "source": "stt"}
+{"t": 1858200, "seq": 248, "kind": "utterance", "state": "consolidated", "text": "Résultat du scrutin, votant 55, tous exprimés, majorité 28 pour, 23 contre 32.", "source": "stt"}
+{"t": 1858200, "seq": 249, "kind": "amendment", "state": "consolidated", "text": "Adt n° 28 de Mme BALAGE EL MARIKY", "canonical": {"acteur": "PA841701", "tribun": "841701", "amendement_uid": "AMANR5L17PO838901BTC2908P0D1N000028", "scrutin": null, "article": "D_Article_1er", "groupe": null}, "source": "stt"}
+{"t": 1858200, "seq": 250, "kind": "amendment", "state": "consolidated", "text": "Adt n° 32 de Mme BALAGE EL MARIKY", "canonical": {"acteur": "PA841701", "tribun": "841701", "amendement_uid": "AMANR5L17PO838901BTC2908P0D1N000032", "scrutin": null, "article": "D_Article_1er", "groupe": null}, "source": "stt"}
+{"t": 1864140, "seq": 251, "kind": "utterance", "state": "consolidated", "text": "L'Assemblée n'a pas adopté.", "source": "stt"}
+{"t": 1865490, "seq": 252, "kind": "utterance", "state": "consolidated", "text": "Nous en arrivons à l'article 4. Monsieur Bottorel pour le haut.", "source": "stt"}
+{"t": 1865490, "seq": 253, "kind": "speaker", "state": "consolidated", "text": "M. Éric Bothorel", "canonical": {"acteur": "PA642695", "tribun": "642695", "amendement_uid": null, "scrutin": null, "article": null, "groupe": "PO845407"}, "source": "stt", "call": false, "heard": "Monsieur Bottorel", "groupe_label": "Ensemble pour la République"}
+{"t": 1895490, "seq": 254, "kind": "utterance", "state": "consolidated", "text": "sont prélevés et sa mère Coralie l'apprendue le prélèvement.", "source": "stt"}
+{"t": 1898770, "seq": 255, "kind": "utterance", "state": "consolidated", "text": "Mais pour assurer l'effectivité, il est indispensable de fixer un délai contraignant.", "source": "stt"}
+{"t": 1902730, "seq": 256, "kind": "utterance", "state": "consolidated", "text": "La notion de meilleur délai, inscrit actuellement dans l'article L230-28 du Code de procédure pénale,", "source": "stt"}
+{"t": 1907470, "seq": 257, "kind": "utterance", "state": "consolidated", "text": "n'apporte pas de garantie suffisante.", "source": "stt"}
+{"t": 1909270, "seq": 258, "kind": "utterance", "state": "consolidated", "text": "C'est pourquoi je vous propose l'amendement qui suit.", "source": "stt"}
+{"t": 1911790, "seq": 259, "kind": "utterance", "state": "consolidated", "text": "Il faut assurer aux proches une information avant la délivrance du permis d'inhumer.", "source": "stt"}
+{"t": 1915710, "seq": 260, "kind": "utterance", "state": "consolidated", "text": "Les familles ne pourront pas faire valeur leur droit,", "source": "stt"}
+{"t": 1917550, "seq": 261, "kind": "utterance", "state": "consolidated", "text": "et notamment celui de demander la liste des prélèvements", "source": "stt"}
+{"t": 1919310, "seq": 262, "kind": "utterance", "state": "consolidated", "text": "si elles ne sont pas informées suffisamment tôt.", "source": "stt"}
+{"t": 1921550, "seq": 263, "kind": "utterance", "state": "consolidated", "text": "Il n'est d'ailleurs pas possible de prévoir une crémation des organes après celle du corps.", "source": "stt"}
+{"t": 1924390, "seq": 264, "kind": "utterance", "state": "consolidated", "text": "C'est pourquoi je vous donne...", "source": "stt"}
+{"t": 1925490, "seq": 265, "kind": "utterance", "state": "consolidated", "text": "Je demande votre soutien unanime sur cet amendement.", "source": "stt"}
+{"t": 1928130, "seq": 266, "kind": "utterance", "state": "consolidated", "text": "Nous le devons.", "source": "stt"}
+{"t": 1929770, "seq": 267, "kind": "utterance", "state": "consolidated", "text": "Quand je lis votre amendement, j'ai juste un petit doute.", "source": "stt"}
+{"t": 1931710, "seq": 268, "kind": "utterance", "state": "consolidated", "text": "Je me permets de vous poser la question.", "source": "stt"}
+{"t": 1933630, "seq": 269, "kind": "utterance", "state": "consolidated", "text": "Est-ce que cet amendement, s'il est adopté,", "source": "stt"}
+{"t": 1933630, "seq": 270, "kind": "ballot", "state": "consolidated", "text": "Adopté", "canonical": {"acteur": "PA841701", "tribun": "841701", "amendement_uid": "AMANR5L17PO838901BTC2908P0D1N000032", "scrutin": null, "article": "D_Article_1er", "groupe": null}, "source": "stt"}
+{"t": 1935870, "seq": 271, "kind": "utterance", "state": "consolidated", "text": "ne va pas parfois ralentir la délivrance du permis d'Inhumé ?", "source": "stt"}
+{"t": 1938910, "seq": 272, "kind": "utterance", "state": "consolidated", "text": "C'est juste cette inquiétude que j'aime.", "source": "stt"}
+{"t": 1941790, "seq": 273, "kind": "utterance", "state": "consolidated", "text": "Et je voulais soumettre cette question.", "source": "stt"}
+{"t": 1945850, "seq": 274, "kind": "utterance", "state": "consolidated", "text": "Monsieur Vautorel ?", "source": "stt"}
+{"t": 1947170, "seq": 275, "kind": "utterance", "state": "consolidated", "text": "Non, pas spécialement.", "source": "stt"}
+{"t": 1949530, "seq": 276, "kind": "utterance", "state": "consolidated", "text": "Moi, je m'en fiche, mais c'est à vous de dire.", "source": "stt"}
+{"t": 1953990, "seq": 277, "kind": "utterance", "state": "consolidated", "text": "Très bien.", "source": "stt"}
+{"t": 1954510, "seq": 278, "kind": "utterance", "state": "consolidated", "text": "Donc on vote.", "source": "stt"}
+{"t": 1955490, "seq": 279, "kind": "utterance", "state": "consolidated", "text": "Double avis favorable. Qui est pour ? Monsieur le ministre, double avis favorable. Qui est pour ? Qui est contre ? Il est adopté 297. Même avis, même vote. Il est adopté également.", "source": "stt"}
+{"t": 1955490, "seq": 280, "kind": "ballot", "state": "consolidated", "text": "Adopté", "canonical": {"acteur": "PA841701", "tribun": "841701", "amendement_uid": "AMANR5L17PO838901BTC2908P0D1N000032", "scrutin": null, "article": "D_Article_1er", "groupe": null}, "source": "stt"}
+{"t": 1970090, "seq": 281, "kind": "utterance", "state": "consolidated", "text": "Scrutin public sur l'article 4. Le scrutin est ouvert. Le scrutin est clos. Résultat du scrutin...", "source": "stt"}
+{"t": 1970090, "seq": 282, "kind": "ballot", "state": "consolidated", "text": "Scrutin ouvert", "canonical": {"acteur": "PA841701", "tribun": "841701", "amendement_uid": "AMANR5L17PO838901BTC2908P0D1N000032", "scrutin": null, "article": "D_Article_1er", "groupe": null}, "source": "stt"}
+{"t": 1985490, "seq": 283, "kind": "utterance", "state": "consolidated", "text": "En votant 62, tout s'exprime, mais j'en étais 32 pour 62 contre 0. L'article 5. Amendement 79 à l'article 5, c'est un amendement de suppression. Madame Capdeviel.", "source": "stt"}
+{"t": 1985490, "seq": 284, "kind": "amendment", "state": "consolidated", "text": "Adt n° 79 de Mme THIÉBAULT-MARTINEZ (scrutin public)", "canonical": {"acteur": "PA841893", "tribun": "841893", "amendement_uid": "AMANR5L17PO838901B2681P0D1N000079", "scrutin": null, "article": "D_Article_5", "groupe": null}, "source": "stt"}
+{"t": 1985490, "seq": 285, "kind": "speaker", "state": "consolidated", "text": "Mme Colette Capdevielle", "canonical": {"acteur": "PA608264", "tribun": "608264", "amendement_uid": null, "scrutin": null, "article": null, "groupe": "PO845419"}, "source": "stt", "call": "strong", "heard": "Madame Capdeviel", "groupe_label": "Socialistes et apparentés"}
+{"t": 1998130, "seq": 286, "kind": "utterance", "state": "consolidated", "text": "Oui, c'est un amendement qui vise à supprimer cet article. L'objectif de cet article, selon ses rédacteurs, serait rationaliser et accélérer le traitement des intérêts civils devant les juridictions pénales.", "source": "stt"}
+{"t": 2015490, "seq": 287, "kind": "utterance", "state": "consolidated", "text": "l'équilibre qui vivent", "source": "stt"}
+{"t": 2018110, "seq": 288, "kind": "utterance", "state": "consolidated", "text": "déjà des situations de", "source": "stt"}
+{"t": 2020090, "seq": 289, "kind": "utterance", "state": "consolidated", "text": "saturation. Donc voilà quel est l'objet de cet article", "source": "stt"}
+{"t": 2022290, "seq": 290, "kind": "utterance", "state": "consolidated", "text": "de suppression. Merci.", "source": "stt"}
+{"t": 2024410, "seq": 291, "kind": "utterance", "state": "consolidated", "text": "Et un identique de suppression", "source": "stt"}
+{"t": 2025830, "seq": 292, "kind": "utterance", "state": "consolidated", "text": "328, Madame Catala.", "source": "stt"}
+{"t": 2025830, "seq": 293, "kind": "speaker", "state": "consolidated", "text": "Mme Gabrielle Cathala", "canonical": {"acteur": "PA842187", "tribun": "842187", "amendement_uid": null, "scrutin": null, "article": null, "groupe": "PO845413"}, "source": "stt", "call": false, "heard": "Madame Catala", "groupe_label": "La France insoumise - Nouveau Front Populaire"}
+{"t": 2028810, "seq": 294, "kind": "utterance", "state": "consolidated", "text": "Pour les mêmes arguments", "source": "stt"}
+{"t": 2030090, "seq": 295, "kind": "utterance", "state": "consolidated", "text": "que ceux donnés par", "source": "stt"}
+{"t": 2032030, "seq": 296, "kind": "utterance", "state": "consolidated", "text": "Madame Capdeviel, nous sommes opposés", "source": "stt"}
+{"t": 2034290, "seq": 297, "kind": "utterance", "state": "consolidated", "text": "à cet article 5", "source": "stt"}
+{"t": 2035490, "seq": 298, "kind": "utterance", "state": "consolidated", "text": "comme les syndicats de", "source": "stt"}
+{"t": 2037930, "seq": 299, "kind": "utterance", "state": "consolidated", "text": "magistrats et d'avocats qui nous ont", "source": "stt"}
+{"t": 2039890, "seq": 300, "kind": "utterance", "state": "consolidated", "text": "alertés sur ces dispositions.", "source": "stt"}
+{"t": 2042110, "seq": 301, "kind": "utterance", "state": "consolidated", "text": "Madame la rapporteure, votre avis ?", "source": "stt"}
+{"t": 2044090, "seq": 302, "kind": "utterance", "state": "consolidated", "text": "Oui, merci.", "source": "stt"}
+{"t": 2045490, "seq": 303, "kind": "utterance", "state": "consolidated", "text": "Merci Madame la Présidente, je suis évidemment défavorable en fait à ces amendements de supprésion.", "source": "stt"}
+{"t": 2049429, "seq": 304, "kind": "utterance", "state": "consolidated", "text": "On a parlé en commission, mais avec grand plaisir Madame la députée, l'idée c'est qu'on ne fait pas de transfert vers une compétence civile.", "source": "stt"}
+{"t": 2056409, "seq": 305, "kind": "utterance", "state": "consolidated", "text": "C'est peut-être pour ça que Madame la rapporteure vous a dit qu'il y avait sans doute une incompréhension par rapport à l'article tel qui était écrit.", "source": "stt"}
+{"t": 2061250, "seq": 306, "kind": "utterance", "state": "consolidated", "text": "Ça reste dans le procès pénal, le juge pénal simplement il renvoie, il renvoie parfois à la demande des parties, il peut le faire lui-même.", "source": "stt"}
+{"t": 2067389, "seq": 307, "kind": "utterance", "state": "consolidated", "text": "D'une part parce que le procès peut être très long sur le volet pénal et avec des condamnations parfois extrêmement fortes.", "source": "stt"}
+{"t": 2072130, "seq": 308, "kind": "utterance", "state": "consolidated", "text": "et ensuite avoir une discussion alors qu'on a eu...", "source": "stt"}
+{"t": 2075489, "seq": 309, "kind": "utterance", "state": "consolidated", "text": "cette discussion autour du volet de l'énergie dans le volet pénal, le volet civil, c'est souvent quelque chose qui est mis à part dans la discussion.", "source": "stt"}
+{"t": 2083389, "seq": 310, "kind": "utterance", "state": "consolidated", "text": "Donc, objectivement, Madame Capdeviel, je pense que c'est vraiment une demande faite par l'immense majorité des professionnels du droit que j'ai rencontrée.", "source": "stt"}
+{"t": 2089790, "seq": 311, "kind": "utterance", "state": "consolidated", "text": "Mais peut-être que Madame la rapporteure pourrait le préciser, en ayant lu le rapport des auditions qu'elle a commis,", "source": "stt"}
+{"t": 2095469, "seq": 312, "kind": "utterance", "state": "consolidated", "text": "je n'y ai pas vu de personnes qui se sont opposées à cette mesure, qui est attendue par beaucoup de monde.", "source": "stt"}
+{"t": 2100030, "seq": 313, "kind": "utterance", "state": "consolidated", "text": "Et là, pour le coup, aucun besoin de moyens supplémentaires, c'est une question d'organisation de la justice.", "source": "stt"}

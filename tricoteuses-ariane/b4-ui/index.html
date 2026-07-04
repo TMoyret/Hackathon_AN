@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trame Vivante — Régie (Ariane B4)</title>
+<!-- hls.js : Chrome/Firefox ne lisent pas le HLS nativement ; requis pour le
+     direct AN (vodalys) et le replay B2. -->
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+<style>
+  :root{
+    --bleu:#000091; --rouge:#e1000f; --encre:#161616; --gris:#666;
+    --fond:#f5f5f7; --carte:#fff; --bord:#e3e3e8;
+    --ok:#18753c; --ko:#ce0500; --neutre:#3a3a3a;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:"Marianne","Segoe UI",system-ui,-apple-system,sans-serif;
+    background:var(--fond); color:var(--encre); font-size:14px;
+    display:grid; height:100vh;
+    grid-template-columns:minmax(300px,360px) 1fr minmax(320px,400px);
+    grid-template-rows:auto 1fr auto;
+    grid-template-areas:"head head head" "tl center ctx" "foot foot foot";
+    gap:10px; padding:10px;
+  }
+
+  /* ---------- Bandeau haut ---------- */
+  header{grid-area:head; background:var(--carte); border:1px solid var(--bord);
+    border-radius:8px; padding:10px 16px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;}
+  header .marianne{width:6px; align-self:stretch; border-radius:3px;
+    background:linear-gradient(var(--bleu) 33%, #fff 33% 66%, var(--rouge) 66%);}
+  header h1{font-size:16px; font-weight:700;}
+  header .meta{color:var(--gris); font-size:13px;}
+  header a{color:var(--bleu);}
+  .badge{font-size:11px; font-weight:700; padding:3px 9px; border-radius:99px; letter-spacing:.4px;}
+  .badge.direct{background:#ffe9e9; color:var(--rouge);}
+  .badge.direct::before{content:"●"; margin-right:5px; animation:pulse 1.2s infinite;}
+  .badge.replay{background:#e8edff; color:var(--bleu);}
+  @keyframes pulse{50%{opacity:.25}}
+  .clock{margin-left:auto; font-family:ui-monospace,Consolas,monospace; font-size:18px; font-weight:700;}
+  .phase-chip{background:#eee; border-radius:6px; padding:3px 8px; font-size:12px;}
+
+  /* ---------- Trame (gauche) ---------- */
+  #timeline{grid-area:tl; background:var(--carte); border:1px solid var(--bord); border-radius:8px;
+    display:flex; flex-direction:column; overflow:hidden;}
+  #timeline h2, #ctx h2{font-size:12px; text-transform:uppercase; letter-spacing:.8px; color:var(--gris);
+    padding:10px 14px; border-bottom:1px solid var(--bord);}
+  #tl-list{overflow-y:auto; flex:1; padding:8px;}
+  #tl-empty{color:var(--gris); font-style:italic; padding:14px; font-size:13px;}
+  .evt{border-left:3px solid #ccc; padding:6px 10px; margin:4px 2px; border-radius:0 6px 6px 0;
+    cursor:pointer; background:#fafafa; transition:background .15s;}
+  .evt:hover{background:#eef1ff;}
+  .evt .t{font-family:ui-monospace,monospace; font-size:11px; color:var(--gris);}
+  .evt .lbl{font-size:13px;}
+  .evt.current{background:#e8edff; border-left-color:var(--bleu); box-shadow:0 0 0 1px var(--bleu) inset;}
+  .evt.ghost{opacity:.45; border-left-style:dashed; cursor:default;}
+  .evt.t-orateur{border-left-color:#6a6af4;}
+  .evt.t-amdt{border-left-color:var(--bleu);}
+  .evt.t-sort_ok{border-left-color:var(--ok);}
+  .evt.t-sort_ko{border-left-color:var(--ko);}
+  .evt.t-scrutin{border-left-color:#b34000;}
+  .evt.t-article{border-left-color:var(--encre); background:#f0f0f0; font-weight:600;}
+  .evt.t-susp{border-left-color:#aaa; font-style:italic;}
+  .evt .src{display:none; margin-top:5px; font-size:11px; color:#444; background:#fffbe6;
+    border:1px dashed #d8c66a; border-radius:4px; padding:4px 6px;}
+  .evt .src .conf{float:right; font-weight:700;}
+  body.glassbox .evt .src{display:block;}
+  .evt .src a{color:var(--bleu);}
+
+  /* ---------- Centre : vidéo + orateur ---------- */
+  #center{grid-area:center; display:flex; flex-direction:column; gap:10px; min-width:0;}
+  #video-wrap{position:relative; background:#000; border-radius:8px; overflow:hidden;
+    aspect-ratio:16/9; max-height:56vh; display:flex; align-items:center; justify-content:center;}
+  video{width:100%; height:100%; object-fit:contain; background:#000;}
+  #video-state{position:absolute; top:8px; left:8px; background:rgba(0,0,0,.55); color:#fff;
+    font-size:11px; padding:3px 8px; border-radius:5px; max-width:72%; pointer-events:none;}
+  #video-placeholder{position:absolute; inset:0; display:flex; flex-direction:column; gap:12px;
+    align-items:center; justify-content:center; color:#bbb; text-align:center; padding:20px; overflow:auto;
+    background:#0a0a0a;}
+  #video-placeholder .cam{font-size:40px;}
+  #video-placeholder button, #video-placeholder label.filebtn{
+    background:var(--bleu); color:#fff; border:none; padding:8px 16px; border-radius:6px;
+    cursor:pointer; font-size:13px; font-weight:600;}
+  #video-placeholder .src-group{display:flex; flex-direction:column; gap:5px; align-items:center;}
+  #video-placeholder .src-label{color:#ddd; font-weight:600; font-size:12px;}
+  #video-placeholder .src-group.adv .src-label{color:#888;}
+  #video-placeholder .hls-row{display:flex; gap:6px; align-items:center; flex-wrap:wrap; justify-content:center;}
+  #video-placeholder .hls-row select,
+  #video-placeholder .hls-row input[type=text]{display:block; padding:7px; min-width:220px;
+    border-radius:6px; border:none; font-size:12px;}
+  #video-placeholder input[type=file]{display:none;}
+
+  /* légende live (transcript brut de la dernière utterance) */
+  #caption{background:var(--carte); border:1px solid var(--bord); border-radius:8px; padding:7px 14px;
+    font-size:13px; min-height:34px; line-height:1.4;}
+  #caption.pending{color:var(--gris); font-style:italic;}
+  #caption:empty{display:none;}
+
+  #speaker{background:var(--carte); border:1px solid var(--bord); border-radius:8px;
+    padding:10px 16px; display:flex; align-items:center; gap:14px; min-height:72px;}
+  #speaker .avatar{width:48px; height:48px; border-radius:50%; background:var(--bleu); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-weight:700; font-size:17px; flex:none;}
+  #speaker .nom{font-size:16px; font-weight:700;}
+  #speaker .fonction{color:var(--gris); font-size:13px;}
+  #speaker .lien{margin-left:auto; font-size:12px;}
+  #speaker .lien a{color:var(--bleu);}
+  #speaker.vide{color:var(--gris); font-style:italic;}
+
+  /* ---------- Contexte (droite) ---------- */
+  #ctx{grid-area:ctx; background:var(--carte); border:1px solid var(--bord); border-radius:8px;
+    overflow-y:auto; display:flex; flex-direction:column;}
+  #ctx-body{padding:12px 14px; display:flex; flex-direction:column; gap:12px;}
+  .card{border:1px solid var(--bord); border-radius:8px; padding:10px 12px;}
+  .card h3{font-size:13px; margin-bottom:6px;}
+  .amdt-num{font-size:18px; font-weight:800; color:var(--bleu);}
+  .amdt-lib{font-size:12.5px; color:var(--neutre); margin:5px 0; line-height:1.45;}
+  .amdt-author{font-size:12px; margin:4px 0;}
+  .amdt-author a{color:var(--bleu);}
+  .sort-tag{display:inline-block; font-weight:700; padding:2px 10px; border-radius:99px; font-size:12px; margin-top:6px;}
+  .sort-tag.ok{background:#e3f5e9; color:var(--ok);}
+  .sort-tag.ko{background:#ffe4e1; color:var(--ko);}
+  .sort-tag.wait{background:#fff3cd; color:#7a5c00;}
+  .liens-utiles a{display:block; font-size:12px; color:var(--bleu); margin:3px 0;}
+
+  /* ---------- Bandeau bas ---------- */
+  footer{grid-area:foot; background:var(--carte); border:1px solid var(--bord); border-radius:8px;
+    padding:8px 16px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;}
+  footer .compteur b{font-size:17px; color:var(--bleu);}
+  footer .b1-status{font-size:12px; color:var(--gris);}
+  footer .lag{font-size:12px; color:var(--gris); font-family:ui-monospace,monospace;}
+  footer .ctrl{display:flex; align-items:center; gap:8px; margin-left:auto; flex-wrap:wrap;}
+  footer button{background:#fff; border:1px solid var(--bord); border-radius:6px; padding:6px 10px;
+    cursor:pointer; font-size:12.5px; font-weight:600;}
+  footer button:hover{border-color:var(--bleu); color:var(--bleu);}
+  footer button.active{background:var(--bleu); color:#fff; border-color:var(--bleu);}
+  #transport{display:inline-flex; align-items:center; gap:5px;}
+  #transport input{width:56px; padding:5px; border:1px solid var(--bord); border-radius:5px; font-size:12px;}
+  #b2-clock{font-family:ui-monospace,monospace; font-size:12px; color:var(--gris); margin-left:4px;}
+
+  @media (max-width:1100px){
+    body{grid-template-columns:1fr; grid-template-rows:auto auto auto auto auto;
+      grid-template-areas:"head" "center" "ctx" "tl" "foot"; height:auto;}
+    #video-wrap{max-height:none;}
+    #tl-list{max-height:50vh;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="marianne"></div>
+  <div>
+    <h1 id="seance-titre">Trame vivante — Assemblée nationale</h1>
+    <div class="meta">Trame déduite de la parole (fil Ariane B1) — orateurs, amendements et scrutins reliés à leurs fiches canoniques</div>
+  </div>
+  <span class="badge replay" id="mode-badge">REPLAY</span>
+  <span class="phase-chip" id="phase-chip">—</span>
+  <span class="clock" id="clock">--:--:--</span>
+</header>
+
+<aside id="timeline">
+  <h2>Trame de la séance</h2>
+  <div id="tl-list"><div id="tl-empty">En attente du fil Ariane (B1)…</div></div>
+</aside>
+
+<section id="center">
+  <div id="video-wrap">
+    <video id="v" controls playsinline></video>
+    <div id="video-state"></div>
+    <div id="video-placeholder">
+      <div class="cam">🎥</div>
+      <div>Choisir une source vidéo</div>
+      <div class="src-group">
+        <span class="src-label">Direct AN (vodalys)</span>
+        <div class="hls-row">
+          <input type="text" id="direct-id" value="19289735_6a44fdbe54da8" title="direct-id complet : ce qui suit videos.assemblee-nationale.fr/direct.&lt;ici&gt;">
+          <button id="btn-live">▶ Direct</button>
+        </div>
+      </div>
+      <div class="src-group">
+        <span class="src-label">Replay B2 (:8000)</span>
+        <div class="hls-row">
+          <select id="record-select"></select>
+          <button id="btn-b2">▶ Charger</button>
+        </div>
+      </div>
+      <div class="src-group">
+        <span class="src-label">VOD locale</span>
+        <label class="filebtn" for="file-mp4">Charger un MP4</label>
+        <input type="file" id="file-mp4" accept="video/*">
+      </div>
+      <button id="btn-sim">▶ Simuler la trame (×10, sans vidéo)</button>
+      <div class="src-group adv">
+        <span class="src-label">Fil Ariane B1 (SSE)</span>
+        <div class="hls-row">
+          <input type="text" id="thread-url" value="http://127.0.0.1:8100/thread">
+          <button id="btn-thread">↻</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="caption"></div>
+  <div id="speaker" class="vide">En attente d'un orateur…</div>
+</section>
+
+<aside id="ctx">
+  <h2>En discussion</h2>
+  <div id="ctx-body">
+    <div class="card" id="card-attente">La discussion n'a pas encore commencé.</div>
+  </div>
+</aside>
+
+<footer>
+  <div class="compteur">Amendements restants : <b id="restants">—</b></div>
+  <div>Sortis : <span id="sortis">0</span></div>
+  <div class="b1-status" id="b1-status">B1 —</div>
+  <div class="lag" id="lag"></div>
+  <div class="ctrl">
+    <span id="transport" style="display:none">
+      <button id="tp-play" title="Lecture">▶</button>
+      <button id="tp-pause" title="Pause">❚❚</button>
+      <button id="tp-back" title="−30 s">−30s</button>
+      <button id="tp-fwd" title="+30 s">+30s</button>
+      <input id="goto-pos" placeholder="mm:ss" title="aller à">
+      <button id="tp-goto">→</button>
+      <span id="b2-clock">—</span>
+    </span>
+    <button id="btn-source" title="Changer de source vidéo">⏏ Source</button>
+    <button id="btn-glass" title="Afficher la source officielle et la confiance sous chaque événement">🔍 Glass-box</button>
+    <button id="btn-full" title="Mode présentation">⛶ Plein écran</button>
+  </div>
+</footer>
+
+<script>
+/* =====================================================================
+   RÉGIE TRAME VIVANTE — Ariane B4
+   Le design « régie » (3 colonnes : trame / vidéo+orateur / contexte) câblé
+   sur les vraies sources : le fil SSE de B1 (la trame déduite de la parole),
+   le direct HLS de l'AN, et le replay B2.
+
+   UNE horloge maîtresse t (secondes). deriveState(EVENTS, t) reste PURE :
+     - VOD locale (mp4) : t = video.currentTime  (le seek reconstruit tout)
+     - replay B2        : t = horloge maîtresse de B2 (/clock)
+     - direct AN (live) : t = ts du dernier nœud reçu (le fil suit son bord)
+     - simulation       : t avance à ×10 sur le fil déjà reçu
+   EVENTS n'est plus statique : il se remplit en direct depuis le fil B1.
+   ===================================================================== */
+
+const B1_DEFAULT = "http://127.0.0.1:8100/thread";  // fil Ariane (SSE), éditable
+const B2 = "http://127.0.0.1:8000";                 // serveur replay B2
+const B2_HLS = B2 + "/live/stream.m3u8";
+const DIRECT_ID_DEFAULT = "19289735_6a44fdbe54da8";
+// direct AN : on épingle UNE variante (stream36_1, 2 Mbps) plutôt que le master
+// — pas de sondage ABR, donc moins de connexions vers Vodalys (429 sinon).
+const liveHlsUrl = (id) => `http://anorigin.vodalys.com/live/live36/stream36_1_${id}.m3u8`;
+const RESTANTS_INIT = 47;   // amendements restants au départ (indicatif)
+const T0 = 21*3600;         // repli d'affichage si aucun epoch vidéo connu
+
+/* ---- liens canoniques (mêmes formats que l'ancienne UI B4) ---- */
+const acteurUrl = (pa) => `https://www.assemblee-nationale.fr/dyn/deputes/${pa}`;
+const groupeUrl = (po) => `https://www2.assemblee-nationale.fr/instances/fiche/OMC_${po}`;
+function parseAmendementUid(uid){
+  const m = /L(\d+).*B(?:TC)?(\d+[A-Z]*?)P\d+D\d+N0*(\d+)$/i.exec(uid || "");
+  return m ? {legislature:m[1], texte:m[2].toUpperCase(), numero:m[3]} : null;
+}
+function amdtUrl(uid){
+  // AMANR5L17PO838901BTC2915P0D1N001136 → /dyn/17/amendements/2915/AN/1136
+  const p = parseAmendementUid(uid);
+  return p ? `https://www.assemblee-nationale.fr/dyn/${p.legislature}/amendements/${p.texte}/AN/${p.numero}` : null;
+}
+const amdtNum = (uid) => parseAmendementUid(uid)?.numero || null;
+function articleUrl(uid, article){
+  const p = parseAmendementUid(uid);
+  const anchor = String(article || "").trim();
+  if(!p || !/^[A-Za-z0-9_-]+$/.test(anchor)) return null;
+  return `https://www.assemblee-nationale.fr/dyn/${p.legislature}/textes/l${p.legislature}b${p.texte}_texte-adopte-commission#${anchor}`;
+}
+function dossierUrl(uid){
+  const p = parseAmendementUid(uid);
+  if(!p) return null;
+  const q = encodeURIComponent(`texte ${p.texte} legislature ${p.legislature}`);
+  return `https://www.assemblee-nationale.fr/dyn/${p.legislature}/dossiers?search=${q}`;
+}
+function scrutinUrl(scrutin, uid){
+  const p = parseAmendementUid(uid);
+  const raw = String(scrutin || "");
+  const nums = raw.match(/\d+/g);
+  const legislature = p?.legislature || /L(\d+)/i.exec(raw)?.[1];
+  if(!legislature || !nums) return null;
+  return `https://www.assemblee-nationale.fr/dyn/${legislature}/scrutins/${nums[nums.length - 1]}`;
+}
+function canonicalLinks(c){
+  const uid = c?.amendement_uid;
+  return {
+    amendementUrl: amdtUrl(uid),
+    articleUrl: articleUrl(uid, c?.article),
+    dossierUrl: dossierUrl(uid),
+    scrutinUrl: scrutinUrl(c?.scrutin, uid),
+  };
+}
+const bestEventUrl = e => e.url || e.scrutinUrl || e.articleUrl || e.dossierUrl || null;
+const extLink = (url, label) => url
+  ? `<a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`
+  : "";
+
+const $ = id => document.getElementById(id);
+const video = $("v");
+
+/* =====================================================================
+   1. LE FIL B1 → EVENTS (la correspondance nœud → événement de trame)
+   ===================================================================== */
+let EVENTS = [];                 // rempli en direct depuis le fil
+const seenSeq = new Set();       // idempotence : le SSE rejoue tout le backlog
+let lastUtter = null;            // dernière utterance consolidée (pour le glass-box)
+let lastArticleAncre = null;     // pour n'émettre un en-tête d'article qu'au changement
+let liveMaxT = 0;                // ts (s) du dernier nœud — horloge du mode direct
+
+function pushArticleIfNew(ancre, ts, seq, sources, texte){
+  if(!ancre || ancre === lastArticleAncre) return;
+  lastArticleAncre = ancre;
+  const m = /(\d+\s*(?:bis|ter|quater)?)/i.exec(ancre);
+  EVENTS.push({type:"article", ts, seq: seq - 0.5, sources, texte_source: texte,
+               label: m ? `Article ${m[1].trim()}` : "Nouvel article"});
+}
+
+let ouvertureSeen = false;
+function onNode(n){
+  if(seenSeq.has(n.seq)) return;   // déjà vu (reconnexion SSE) — idempotent
+  seenSeq.add(n.seq);
+  const ts = (n.t || 0) / 1000;
+  if(ts > liveMaxT) liveMaxT = ts;
+
+  // utterance : pas un événement de trame, mais la légende live + la provenance
+  if(n.kind === "utterance"){
+    if(n.state === "consolidated"){
+      lastUtter = {t:n.t, text:n.text}; setCaption(n.text, false);
+      if(!ouvertureSeen){           // 1re parole consolidée = début de séance : marqueur cliquable
+        ouvertureSeen = true;
+        EVENTS.push({type:"ouverture", ts, seq:-1, sources:["stt"], label:"Séance ouverte"});
+        EVENTS.sort((a,b) => a.ts - b.ts || a.seq - b.seq);
+      }
+    }
+    else setCaption(n.text, true);
+    return;
+  }
+
+  const c = n.canonical || {};
+  const sources = n.source ? [n.source] : [];
+  // les nœuds déduits partagent le t de l'utterance déclencheuse → on rattache
+  // la phrase source (le « pourquoi » du glass-box)
+  const texte = (lastUtter && lastUtter.t === n.t) ? lastUtter.text : null;
+  let ev = null;
+
+  if(n.kind === "speaker"){
+    if(!n.call) return;            // simple mention citée dans un discours : pas de tour
+    ev = {type:"orateur", nom:n.text, heard:n.heard,
+          url: c.acteur ? acteurUrl(c.acteur) : null,
+          groupe: c.groupe, groupeLabel: n.groupe_label,
+          label: n.text + (n.groupe_label ? ` (${n.groupe_label})` : "")};
+
+  } else if(n.kind === "amendment"){
+    const num = amdtNum(c.amendement_uid);
+    const links = canonicalLinks(c);
+    pushArticleIfNew(c.article, ts, n.seq, sources, texte);   // en-tête d'article au besoin
+    ev = {type:"appel_amendement", nums: num ? [num] : [], uid: c.amendement_uid,
+          url: links.amendementUrl, author: c.acteur, libelle: n.text, article: c.article,
+          amendementUrl: links.amendementUrl, articleUrl: links.articleUrl,
+          dossierUrl: links.dossierUrl, scrutinUrl: links.scrutinUrl,
+          label: `Amendement nᵒ ${num || "?"}`};
+
+  } else if(n.kind === "ballot"){
+    const num = amdtNum(c.amendement_uid);
+    const links = canonicalLinks(c);
+    if(n.text === "Adopté" || n.text === "Rejeté"){
+      const adopte = n.text === "Adopté";
+      ev = {type:"sort_amendement", nums: num ? [num] : [], sort: adopte ? "adopte" : "rejete",
+            amendementUrl: links.amendementUrl, articleUrl: links.articleUrl,
+            dossierUrl: links.dossierUrl, scrutinUrl: links.scrutinUrl,
+            label: `Amendement nᵒ ${num || "?"} : ${adopte ? "adopté" : "rejeté"}`};
+    } else {  // « Scrutin ouvert » / « Mise aux voix »
+      ev = {type:"mise_aux_voix", nums: num ? [num] : [],
+            amendementUrl: links.amendementUrl, articleUrl: links.articleUrl,
+            dossierUrl: links.dossierUrl, scrutinUrl: links.scrutinUrl,
+            label: `${n.text}${num ? ` — nᵒ ${num}` : ""}`};
+    }
+  }
+  if(!ev) return;
+
+  ev.ts = ts; ev.seq = n.seq; ev.sources = sources; ev.texte_source = texte;
+  ev.lien = bestEventUrl(ev);
+  EVENTS.push(ev);
+  EVENTS.sort((a,b) => a.ts - b.ts || a.seq - b.seq);   // ordre temporel stable
+}
+
+/* =====================================================================
+   2. deriveState : fonction PURE (portable dans le front réel)
+   ===================================================================== */
+function deriveState(events, t){
+  const past = [], state = {phase:"—", article:null, orateur:null, amendement:null,
+                            vote:null, voteEvent:null, sorts:{}, sortis:0};
+  for(const e of events){
+    if(e.ts > t) break;
+    past.push(e);
+    switch(e.type){
+      case "article": state.article = e; state.amendement = null; state.vote = null; state.voteEvent = null;
+                      state.phase = "Discussion des articles"; break;
+      case "appel_amendement": state.amendement = e; state.vote = null;
+                      state.voteEvent = null;
+                      state.phase = "Discussion des articles"; break;
+      case "orateur": state.orateur = e; break;
+      case "mise_aux_voix": state.vote = "ouvert"; state.voteEvent = e.scrutinUrl ? e : (state.voteEvent || e); state.phase = "Vote en cours"; break;
+      case "sort_amendement":
+        e.nums.forEach(num => state.sorts[num] = e.sort);
+        state.sortis += e.nums.length;
+        state.vote = e.sort; state.voteEvent = e.scrutinUrl ? e : (state.voteEvent || e); state.phase = "Discussion des articles"; break;
+    }
+  }
+  return {state, past};
+}
+
+/* =====================================================================
+   3. Rendu
+   ===================================================================== */
+let startEpoch = null;   // epoch (s) du début vidéo, via /start-epoch ou origin B2
+const parisTime = new Intl.DateTimeFormat("fr-FR", {timeStyle:"medium", timeZone:"Europe/Paris"});
+function fmtClock(t){
+  if(startEpoch) return parisTime.format(new Date((startEpoch + t) * 1000));  // heure réelle de séance
+  const s = Math.max(0, Math.floor(T0 + t));
+  return [s/3600|0, (s/60|0)%60, s%60].map(n=>String(n).padStart(2,"0")).join(":");
+}
+const fmtDur = ms => { const s = Math.max(0, Math.floor((ms||0)/1000));
+  return [s/3600|0, (s/60|0)%60, s%60].map(n=>String(n).padStart(2,"0")).join(":"); };
+
+const typeClass = e => e.type==="orateur" ? "t-orateur"
+  : e.type==="sort_amendement" ? (e.sort==="adopte"?"t-sort_ok":"t-sort_ko")
+  : e.type==="mise_aux_voix" ? "t-scrutin"
+  : e.type==="article" ? "t-article"
+  : e.type==="appel_amendement" ? "t-amdt" : "";
+
+let userScrolled = 0;
+$("tl-list").addEventListener("wheel", ()=> userScrolled = Date.now());
+
+function renderTimeline(past, nextEvt){
+  const list = $("tl-list");
+  list.innerHTML = "";
+  if(!past.length){ list.innerHTML = `<div id="tl-empty">En attente du fil Ariane (B1)…</div>`; return; }
+  past.forEach((e,i)=>{
+    const d = document.createElement("div");
+    d.className = "evt " + typeClass(e) + (i===past.length-1 ? " current":"");
+    const conf = e.confiance ? ` · ${Math.round(e.confiance*100)} %` : "";
+    d.innerHTML = `<div class="t">${fmtClock(e.ts)}</div><div class="lbl">${e.label}</div>
+      <div class="src"><span class="conf">${(e.sources||[]).join(" + ")}${conf}</span>
+      ${e.texte_source?`« ${e.texte_source} »`:""}${bestEventUrl(e)?` — ${extLink(bestEventUrl(e), "source")}`:""}</div>`;
+    d.title = "Cliquer pour caler la vidéo à cet instant";
+    d.onclick = () => seekTo(e.ts);
+    list.appendChild(d);
+  });
+  if(nextEvt){
+    const g = document.createElement("div");
+    g.className = "evt ghost";
+    g.innerHTML = `<div class="t">à suivre</div><div class="lbl">${nextEvt.label}</div>`;
+    list.appendChild(g);
+  }
+  if(Date.now() - userScrolled > 4000) list.scrollTop = list.scrollHeight;
+}
+
+function initials(nom){
+  const parts = (nom||"").replace(/^(M\.|Mme|Monsieur|Madame)\s+/,"").split(/\s+/).filter(Boolean);
+  return parts.slice(0,2).map(w=>w[0]?.toUpperCase()||"").join("") || "?";
+}
+let _lastSpeakerKey = null;
+function renderSpeaker(o){
+  const sp = $("speaker");
+  if(!o){
+    if(_lastSpeakerKey === " vide") return;   // ne pas réécrire le DOM chaque frame
+    _lastSpeakerKey = " vide";
+    sp.className="vide"; sp.textContent = "En attente d'un orateur…"; return;
+  }
+  const lien = o.url ? `<div class="lien"><a href="${o.url}" target="_blank">Fiche du député →</a></div>` : "";
+  const grp = o.groupeLabel
+    ? `<div class="fonction">${o.groupe ? `<a href="${groupeUrl(o.groupe)}" target="_blank" style="color:var(--gris)">${o.groupeLabel}</a>` : o.groupeLabel}</div>`
+    : `<div class="fonction">Intervenant·e</div>`;
+  const html = `<div class="avatar">${initials(o.nom)}</div>
+    <div><div class="nom">${o.nom}</div>${grp}</div>${lien}`;
+  if(html === _lastSpeakerKey) return;   // idem : réécrire innerHTML chaque frame détruit
+  _lastSpeakerKey = html;                // les <a> et casse le clic gauche (ouvre au click)
+  sp.className = "";
+  sp.innerHTML = html;
+}
+
+let _lastCtxHtml = null;
+function renderCtx(state){
+  const b = $("ctx-body");
+  let html;
+  if(!state.amendement){
+    html = `<div class="card">${state.article ? state.article.label : "La discussion n'a pas encore commencé."}</div>`;
+  } else {
+    const a = state.amendement, num = a.nums[0];
+    const sort = state.sorts[num];
+    const sortHtml = sort
+      ? `<span class="sort-tag ${sort==="adopte"?"ok":"ko"}">${sort==="adopte"?"✓ Adopté":"✗ Rejeté"}</span>`
+      : (state.phase === "Vote en cours"
+          ? `<span class="sort-tag wait">Scrutin en cours…</span>`
+          : `<span class="sort-tag wait">En discussion…</span>`);
+    html = `<div class="card">
+        ${state.article?`<h3>${state.article.label}</h3>`:""}
+        <div class="amdt-num">Amendement nᵒ ${num || "?"}</div>
+        ${a.libelle?`<div class="amdt-lib">${a.libelle}</div>`:""}
+        ${a.author?`<div class="amdt-author">Auteur : ${extLink(acteurUrl(a.author), "fiche →")}</div>`:""}
+        ${sortHtml}
+      </div>`;
+    const voteEvent = state.voteEvent || {};
+    const liens = [
+      extLink(a.amendementUrl || a.url, "Amendement (données ouvertes / dyn)"),
+      extLink(voteEvent.scrutinUrl || a.scrutinUrl, "Scrutin public"),
+      extLink(a.articleUrl || voteEvent.articleUrl, "Article dans le texte de la commission"),
+      extLink(a.dossierUrl || voteEvent.dossierUrl, "Dossier législatif"),
+    ].filter(Boolean);
+    if(liens.length) html += `<div class="card liens-utiles"><h3>Liens</h3>${liens.join("")}</div>`;
+  }
+  if(html === _lastCtxHtml) return;   // ne réécrire innerHTML que si le contenu change :
+  _lastCtxHtml = html;                // sinon les <a> sont recréés chaque frame → clic gauche cassé
+  b.innerHTML = html;
+}
+
+let lastPastLen = -1;
+function render(t){
+  const {state, past} = deriveState(EVENTS, t);
+  $("clock").textContent = fmtClock(t);
+  $("phase-chip").textContent = state.phase;
+  $("restants").textContent = Math.max(0, RESTANTS_INIT - state.sortis);
+  $("sortis").textContent = state.sortis;
+  renderSpeaker(state.orateur);
+  renderCtx(state);
+  if(past.length !== lastPastLen){                    // re-rendre la liste au besoin
+    renderTimeline(past, EVENTS[past.length]);
+    lastPastLen = past.length;
+  }
+  // « retard réel » (info) : écart entre la frame jouée et le temps réel
+  if(startEpoch && video.currentTime){
+    const lag = Date.now()/1000 - (startEpoch + video.currentTime);
+    $("lag").textContent = `retard ${lag.toFixed(0)} s`;
+  } else $("lag").textContent = "";
+}
+
+/* =====================================================================
+   4. Horloge maîtresse : 4 modes
+   ===================================================================== */
+let mode = "idle";                       // idle | mp4 | live | b2 | sim
+let simT = 0, simTimer = null;
+let b2ClockT = 0;                        // horloge maîtresse de B2 (s)
+
+function currentT(){
+  if(mode === "mp4") return video.currentTime;
+  if(mode === "b2")  return b2ClockT;
+  if(mode === "sim") return simT;
+  if(mode === "live") return liveMaxT;   // le direct suit le bord d'attaque du fil
+  return 0;
+}
+function seekTo(ts){
+  if(mode === "mp4") video.currentTime = ts;
+  else if(mode === "sim"){ simT = ts; }
+  else if(mode === "b2") transport("seek", `?t=${Math.floor(ts*1000)}`);
+  /* live : pas de seek (bord d'attaque) */
+}
+function loop(){ render(currentT()); requestAnimationFrame(loop); }
+
+/* ---- petits utilitaires d'UI ---- */
+function setState(txt){ $("video-state").textContent = txt || ""; }
+function setBadge(m){ const b = $("mode-badge");
+  b.className = "badge " + m; b.textContent = m==="direct" ? "EN DIRECT" : "REPLAY"; }
+function showOverlay(){ $("video-placeholder").style.display = "flex"; }
+function hideOverlay(){ $("video-placeholder").style.display = "none"; }
+function setCaption(txt, pending){ const c = $("caption");
+  c.textContent = txt || ""; c.className = pending ? "pending" : ""; }
+
+/* =====================================================================
+   5. Vidéo — HLS robuste (repris de l'ancienne B4), VOD locale, simulation
+   ===================================================================== */
+let hls = null;
+function playUrl(url, label){
+  if(hls){ hls.destroy(); hls = null; }
+  video.pause(); video.removeAttribute("src"); video.load();
+  setState(label); hideOverlay();
+  if(video.canPlayType("application/vnd.apple.mpegurl")){
+    video.src = url;                                  // Safari lit le HLS nativement
+    video.play().catch(()=>{});
+  } else if(window.Hls && Hls.isSupported()){
+    hls = new Hls({
+      liveSyncDurationCount: 3,
+      // patience avec les 429 de Vodalys : réessayer avec délai plutôt que marteler
+      manifestLoadingMaxRetry: 8, manifestLoadingRetryDelay: 1500,
+      levelLoadingMaxRetry: 8, levelLoadingRetryDelay: 1500,
+      fragLoadingMaxRetry: 10, fragLoadingRetryDelay: 1500,
+    });
+    hls.loadSource(url); hls.attachMedia(video);
+    hls.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(()=>{}));
+    hls.on(Hls.Events.ERROR, (_e, d) => {
+      if(!d.fatal) return;                            // se ré-amorcer plutôt que mourir
+      if(d.type === Hls.ErrorTypes.NETWORK_ERROR){
+        setState("reprise réseau (429 ? ferme les autres onglets vidéo)…");
+        setTimeout(() => { if(hls) hls.startLoad(); }, 3000);
+      } else if(d.type === Hls.ErrorTypes.MEDIA_ERROR){
+        setState("reprise média…"); hls.recoverMediaError();
+      } else { setState("erreur fatale — rechargement"); playUrl(url, label); }
+    });
+  } else setState("hls.js indisponible (pas de lecture HLS)");
+}
+
+function playLive(){
+  const did = $("direct-id").value.trim();
+  mode = "live"; setBadge("direct");
+  $("transport").style.display = "none";
+  fetchStartEpoch(did);                               // date de début vidéo (pour l'horloge)
+  playUrl(liveHlsUrl(did.split("_")[0]), "LIVE — bord d'attaque");
+}
+
+// serve.py récupère liveplayer.nvs côté serveur (l'AN n'envoie pas de CORS)
+async function fetchStartEpoch(did){
+  try{
+    const j = await (await fetch(`/start-epoch?id=${encodeURIComponent(did)}`)).json();
+    if(j.start_epoch) startEpoch = j.start_epoch;
+  }catch(e){ /* on garde ce qu'on a */ }
+}
+
+/* --- VOD locale (mp4) --- */
+$("file-mp4").onchange = e => {
+  const f = e.target.files[0]; if(!f) return;
+  stopSim(); mode = "mp4"; setBadge("replay");
+  $("transport").style.display = "none";
+  startEpoch = null;
+  video.src = URL.createObjectURL(f);
+  video.play().catch(()=>{});
+  hideOverlay();
+};
+
+/* --- Simulation ×10 (rejoue la trame déjà reçue, sans vidéo) --- */
+$("btn-sim").onclick = () => {
+  mode = "sim"; setBadge("replay"); hideOverlay();
+  $("transport").style.display = "none";
+  if(simTimer) return;
+  simTimer = setInterval(() => { simT += 1; if(simT > liveMaxT + 5) simT = 0; }, 100);
+};
+function stopSim(){ clearInterval(simTimer); simTimer = null; }
+
+/* =====================================================================
+   6. Replay B2 : sélecteur de séance + transport à l'horloge
+   ===================================================================== */
+async function loadRecords(){
+  try{
+    const recs = await (await fetch(B2 + "/records")).json();
+    const sel = $("record-select"); sel.replaceChildren();
+    for(const r of recs){
+      const o = document.createElement("option");
+      o.value = r.name; o.textContent = r.name; o.selected = r.current;
+      sel.appendChild(o);
+    }
+  }catch(e){ /* B2 éteint : sélecteur vide */ }
+}
+// en replay, l'ancre mur-horloge est l'origine de B2 (le début vidéo)
+async function b2Anchor(){
+  try{
+    const s = await (await fetch(B2 + "/clock")).json();
+    if(s.origin) startEpoch = Math.floor(new Date(s.origin).getTime()/1000);
+  }catch(e){}
+}
+async function loadRecord(){
+  const name = $("record-select").value; if(!name) return;
+  await fetch(B2 + `/record?name=${encodeURIComponent(name)}`, {method:"POST"});
+  await b2Anchor();
+  mode = "b2"; setBadge("replay"); $("transport").style.display = "inline-flex";
+  transport("play");
+  setState(`replay ${name} — démarrage… (B1 se re-référence sous ~30 s)`);
+}
+// le streamer B2 reconstruit sa playlist à chaque déplacement (~4-5 s) : attendre
+// qu'elle existe avant de recâbler le player, et DIRE qu'on repositionne
+async function waitForPlaylist(timeoutMs = 20000){
+  const t0 = Date.now();
+  while(Date.now() - t0 < timeoutMs){
+    try{ const r = await fetch(B2_HLS, {method:"HEAD", cache:"no-store"}); if(r.ok) return true; }catch(e){}
+    await new Promise(res => setTimeout(res, 800));
+  }
+  return false;
+}
+async function transport(cmd, params = "", rewire = true){
+  try{
+    await fetch(B2 + `/clock/${cmd}${params}`, {method:"POST"});
+    await b2Anchor();
+    if(rewire){
+      setState("repositionnement du direct simulé…");
+      if(await waitForPlaylist()) playUrl(B2_HLS, "REPLAY B2 — bord d'attaque");
+      else setState("flux B2 indisponible après repositionnement");
+    }
+  }catch(e){ setState("B2 injoignable (:8000)"); }
+}
+function gotoPosition(){
+  const raw = $("goto-pos").value.trim();
+  const m = /^(\d+)(?::([0-5]?\d))?$/.exec(raw);        // "75" (min) ou "75:30"
+  if(!m){ setState("position invalide (mm ou mm:ss)"); return; }
+  const ms = (parseInt(m[1],10)*60 + parseInt(m[2]||"0",10)) * 1000;
+  transport("seek", `?t=${ms}`);
+}
+// horloge B2 : la source de vérité de t en mode replay
+setInterval(async () => {
+  try{
+    const s = await (await fetch(B2 + "/clock")).json();
+    b2ClockT = (s.t_ms || 0) / 1000;
+    $("b2-clock").textContent = `${s.playing ? "▶" : "❚❚"} ${fmtDur(s.t_ms)}`;
+  }catch(e){ $("b2-clock").textContent = "B2 —"; }
+}, 1000);
+
+/* =====================================================================
+   7. Connexion au fil B1 (SSE)
+   ===================================================================== */
+let es = null;
+function resetTrame(){
+  EVENTS = []; seenSeq.clear();
+  lastUtter = null; lastArticleAncre = null;
+  liveMaxT = 0; simT = 0; lastPastLen = -1;
+  setCaption("", false);
+}
+function connectThread(){
+  if(es) es.close();
+  resetTrame();
+  const url = $("thread-url").value.trim();
+  es = new EventSource(url);
+  es.onopen = () => { $("b1-status").textContent = "B1 ✓ connecté"; };
+  es.onmessage = ev => { try{ onNode(JSON.parse(ev.data)); }catch(e){} };
+  es.onerror = () => { $("b1-status").textContent = `B1 hors ligne (${url})`; };
+}
+
+/* =====================================================================
+   8. Contrôles
+   ===================================================================== */
+$("btn-live").onclick   = playLive;
+$("btn-b2").onclick     = loadRecord;
+$("btn-thread").onclick = connectThread;
+$("thread-url").addEventListener("change", connectThread);
+$("tp-play").onclick  = () => transport("play");
+$("tp-pause").onclick = () => { transport("pause", "", false); video.pause(); };
+$("tp-back").onclick  = () => transport("seek_by", "?delta=-30000");
+$("tp-fwd").onclick   = () => transport("seek_by", "?delta=30000");
+$("tp-goto").onclick  = gotoPosition;
+$("goto-pos").addEventListener("keydown", e => { if(e.key === "Enter") gotoPosition(); });
+$("btn-source").onclick = showOverlay;
+$("btn-glass").onclick  = e => { document.body.classList.toggle("glassbox");
+  e.currentTarget.classList.toggle("active"); lastPastLen = -1; };
+$("btn-full").onclick   = () => document.documentElement.requestFullscreen?.();
+
+/* =====================================================================
+   9. Démarrage
+   ===================================================================== */
+loadRecords();
+connectThread();
+// ?video=<url>[&epoch=<s>] : charger une VOD par URL (démo/replay hors B2) ;
+// sinon si B2 répond, session replay ; sinon, direct AN.
+(async () => {
+  const q = new URLSearchParams(location.search);
+  if(q.get("video")){
+    if(q.get("epoch")) startEpoch = parseInt(q.get("epoch"), 10) || null;
+    mode = "mp4"; setBadge("replay"); $("transport").style.display = "none";
+    video.src = q.get("video"); video.play().catch(()=>{});
+    hideOverlay();
+    return;
+  }
+  try{
+    const s = await (await fetch(B2 + "/clock")).json();
+    await b2Anchor();
+    mode = "b2"; setBadge("replay"); $("transport").style.display = "inline-flex";
+    if(s.playing){ if(await waitForPlaylist()) playUrl(B2_HLS, "REPLAY B2 — bord d'attaque"); }
+    else setState("replay B2 en pause — ▶ pour lancer");
+    return;
+  }catch(e){ /* B2 éteint : on bascule sur le direct */ }
+  playLive();
+})();
+
+render(0);
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
