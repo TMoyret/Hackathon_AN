@@ -76,7 +76,7 @@ Le tout fonctionne hors-ligne sur un laptop, sans GPU, grâce au mode *démo* qu
 - [Diapositives de présentation](docs/diapositives.pdf)
 
 ### URL de démonstration
-https://ariane-an-tail86bcaa.ts.net/demo.html
+https://ariane-an-tail86bcca.ts.net/demo.html
 
 ### Déploiement Docker (démo)
 ```bash
