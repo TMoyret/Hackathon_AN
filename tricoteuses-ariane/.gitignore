@@ -35,3 +35,4 @@ pytest-cache-files-*/
 /graphify-out/cache/
 /graphify-out/.graphify_*.json
 /graphify-out/.graphify_uncached.txt
+/data/

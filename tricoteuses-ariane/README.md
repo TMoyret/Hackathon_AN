@@ -62,6 +62,8 @@ cd b2-replay && python -m pytest -q     # 51 tests
 cd b3-capture && python -m pytest -q    #  8 tests
 ```
 
+Replay captures under data/ are intentionally not versioned in this GitHub mirror. The commands below expect the local/shared hackathon data/ folder to be present.
+
 Typical demo loop (replay a captured sitting and weave it):
 
 ```bash
@@ -111,3 +113,4 @@ Ariane resolves canonical IDs against the open-data **Tricoteuses Parlement REST
 API** (`parlement.tricoteuses.fr`) and slots in as a maillon of the transcription
 pipeline. The ecosystem it draws on is catalogued in
 [`forgejo.json`](forgejo.json).
+
