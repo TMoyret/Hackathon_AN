@@ -354,10 +354,15 @@ function onNode(n){
 
   if(n.kind === "speaker"){
     if(!n.call) return;            // simple mention citée dans un discours : pas de tour
-    ev = {type:"orateur", nom:n.text, heard:n.heard,
+    ev = {type:"orateur", nom:n.text, heard:n.heard, role:n.role,
           url: c.acteur ? acteurUrl(c.acteur) : null,
           groupe: c.groupe, groupeLabel: n.groupe_label,
           label: n.text + (n.groupe_label ? ` (${n.groupe_label})` : "")};
+
+  } else if(n.kind === "avis"){
+    const sens = n.sens === "defavorable" ? "défavorable" : n.sens;
+    ev = {type:"avis", organe:n.organe, sens:n.sens,
+          label:`Avis — ${n.organe} : ${sens}`};
 
   } else if(n.kind === "amendment"){
     const num = amdtNum(c.amendement_uid);
@@ -398,17 +403,19 @@ function onNode(n){
    ===================================================================== */
 function deriveState(events, t){
   const past = [], state = {phase:"—", article:null, orateur:null, amendement:null,
-                            vote:null, voteEvent:null, sorts:{}, sortis:0};
+                            vote:null, voteEvent:null, sorts:{}, sortis:0, avis:{}};
   for(const e of events){
     if(e.ts > t) break;
     past.push(e);
     switch(e.type){
       case "article": state.article = e; state.amendement = null; state.vote = null; state.voteEvent = null;
+                      state.avis = {};
                       state.phase = "Discussion des articles"; break;
       case "appel_amendement": state.amendement = e; state.vote = null;
-                      state.voteEvent = null;
+                      state.voteEvent = null; state.avis = {};
                       state.phase = "Discussion des articles"; break;
       case "orateur": state.orateur = e; break;
+      case "avis": state.avis[e.organe] = e.sens; break;
       case "mise_aux_voix": state.vote = "ouvert"; state.voteEvent = e.scrutinUrl ? e : (state.voteEvent || e); state.phase = "Vote en cours"; break;
       case "sort_amendement":
         e.nums.forEach(num => state.sorts[num] = e.sort);
@@ -478,7 +485,10 @@ function renderSpeaker(o){
     sp.className="vide"; sp.textContent = "En attente d'un orateur…"; return;
   }
   const lien = o.url ? `<div class="lien"><a href="${o.url}" target="_blank">Fiche du député →</a></div>` : "";
-  const grp = o.groupeLabel
+  const ROLE_LABEL = {rapporteur:"Rapporteure", ministre:"Ministre", president:"Présidence"};
+  const grp = o.role
+    ? `<div class="fonction">${ROLE_LABEL[o.role] || o.role}</div>`
+    : o.groupeLabel
     ? `<div class="fonction">${o.groupe ? `<a href="${groupeUrl(o.groupe)}" target="_blank" style="color:var(--gris)">${o.groupeLabel}</a>` : o.groupeLabel}</div>`
     : `<div class="fonction">Intervenant·e</div>`;
   const html = `<div class="avatar">${initials(o.nom)}</div>
@@ -503,11 +513,17 @@ function renderCtx(state){
       : (state.phase === "Vote en cours"
           ? `<span class="sort-tag wait">Scrutin en cours…</span>`
           : `<span class="sort-tag wait">En discussion…</span>`);
+    const avisE = Object.entries(state.avis);
+    const avisHtml = avisE.length
+      ? `<div class="amdt-avis">Avis — ${avisE.map(([o,s]) =>
+          `${o} : ${s==="defavorable"?"défavorable":s}`).join(" · ")}</div>`
+      : "";
     html = `<div class="card">
         ${state.article?`<h3>${state.article.label}</h3>`:""}
         <div class="amdt-num">Amendement nᵒ ${num || "?"}</div>
         ${a.libelle?`<div class="amdt-lib">${a.libelle}</div>`:""}
         ${a.author?`<div class="amdt-author">Auteur : ${extLink(acteurUrl(a.author), "fiche →")}</div>`:""}
+        ${avisHtml}
         ${sortHtml}
       </div>`;
     const voteEvent = state.voteEvent || {};
