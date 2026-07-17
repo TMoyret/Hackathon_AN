@@ -23,7 +23,11 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_RECORD = REPO_ROOT / "data" / "2026-06-30-aprem"
-DEFAULT_CPU_MODEL = "mobiuslabsgmbh/faster-whisper-large-v3-turbo"
+# small @ chunk 15 is the measured CPU sweet spot: 1.52x realtime (live-capable;
+# turbo was 0.48x and never kept up), ~17s latency, and deputy names are fixed
+# post-STT by b1-weaver/name_correct against --actors.
+DEFAULT_CPU_MODEL = "Systran/faster-whisper-small"
+DEFAULT_CHUNK_SECONDS = 15.0
 
 
 class ManagedProcess:
@@ -121,9 +125,9 @@ def main() -> int:
     parser.add_argument("--time-offset-ms", type=int, default=None,
                         help="B1 timestamp offset; default: --start-ms")
     parser.add_argument("--model", default=DEFAULT_CPU_MODEL,
-                        help="faster-whisper model for CPU; use small only after repairing/downloading that cache")
+                        help="faster-whisper model for CPU (default: small, the measured live-capable choice)")
     parser.add_argument("--compute-type", default="int8")
-    parser.add_argument("--chunk-seconds", type=float, default=30.0)
+    parser.add_argument("--chunk-seconds", type=float, default=DEFAULT_CHUNK_SECONDS)
     parser.add_argument("--beam", type=int, default=1)
     parser.add_argument("--cpu-threads", type=int, default=0)
     parser.add_argument("--allow-model-download", action="store_true",

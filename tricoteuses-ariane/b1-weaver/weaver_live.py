@@ -35,6 +35,7 @@ import numpy as np
 
 import deduce
 import diar
+import name_correct
 import weaver as w
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -64,10 +65,14 @@ def audio_frames(source, min_chunk=1.0, user_agent=None, referer=None,
     start_seconds seeks the input before reading (-ss): used when B1 reads a VOD file
     directly from the sitting start, so flow_s == content position and the emitted
     timestamps land exactly on the video's currentTime."""
+    # -user_agent/-referer are HTTP demuxer options: only valid for a URL source.
+    # Some ffmpeg builds reject them on a local file ("Option user_agent not found"),
+    # so a VOD-file --source (the CPU replay path) must not carry them.
+    is_url = str(source).startswith(("http://", "https://"))
     headers = []
-    if user_agent:
+    if is_url and user_agent:
         headers += ["-user_agent", user_agent]
-    if referer:
+    if is_url and referer:
         headers += ["-referer", referer]
     seek = ["-ss", f"{start_seconds:.3f}"] if start_seconds else []
     ff = subprocess.Popen(
@@ -114,7 +119,7 @@ def _transcribe_local_agreement(source, weaver, emit_node, model="large-v3",
                                 user_agent=None, referer=None, vad=True,
                                 diar_worker=None, follow=False,
                                 max_seconds=None, time_offset_s=0.0,
-                                start_seconds=0.0):
+                                start_seconds=0.0, corrector=None):
     """Drive Whisper over the source's audio, weaving every event into the thread."""
     from whisper_online import FasterWhisperASR, OnlineASRProcessor
 
@@ -156,6 +161,8 @@ def _transcribe_local_agreement(source, weaver, emit_node, model="large-v3",
 
             cbeg, cend, ctext = online.process_iter()  # confirmed (LocalAgreement)
             if ctext:
+                if corrector is not None:
+                    ctext = corrector.fix(ctext)
                 emit({"type": "utterance", "beg": cbeg, "end": cend, "text": ctext})
                 print(f"✓ [{cbeg:6.1f}-{cend:6.1f}] {ctext}", file=sys.stderr, flush=True)
                 last_interim = ""
@@ -178,6 +185,8 @@ def _transcribe_local_agreement(source, weaver, emit_node, model="large-v3",
 
     fbeg, fend, ftext = online.finish()
     if ftext:
+        if corrector is not None:
+            ftext = corrector.fix(ftext)
         emit({"type": "utterance", "beg": fbeg, "end": fend, "text": ftext})
 
 
@@ -186,7 +195,7 @@ def _transcribe_chunked(source, weaver, emit_node, model="small", device="cpu",
                         vad=True, diar_worker=None, follow=False,
                         max_seconds=None, time_offset_s=0.0,
                         chunk_seconds=30.0, beam=1, cpu_threads=0,
-                        local_files_only=False, start_seconds=0.0):
+                        local_files_only=False, start_seconds=0.0, corrector=None):
     """CPU-friendly faster-whisper backend.
 
     It emits confirmed utterances after fixed-size chunks. This is less polished
@@ -232,6 +241,8 @@ def _transcribe_chunked(source, weaver, emit_node, model="small", device="cpu",
             text = (s.text or "").strip()
             if not text:
                 continue
+            if corrector is not None:
+                text = corrector.fix(text)
             beg = flow_s + float(s.start)
             end = flow_s + float(s.end)
             emit({"type": "utterance", "beg": beg, "end": end, "text": text})
@@ -273,7 +284,7 @@ def transcribe(source, weaver, emit_node, model="large-v3", backend="local-agree
                device="cuda", compute_type=None, user_agent=None, referer=None,
                vad=True, diar_worker=None, follow=False, max_seconds=None,
                time_offset_s=0.0, chunk_seconds=30.0, beam=1, cpu_threads=0,
-               local_files_only=False, start_seconds=0.0):
+               local_files_only=False, start_seconds=0.0, corrector=None):
     compute_type = compute_type or _default_compute_type(device)
     if backend == "chunked":
         return _transcribe_chunked(
@@ -282,13 +293,14 @@ def transcribe(source, weaver, emit_node, model="large-v3", backend="local-agree
             vad=vad, diar_worker=diar_worker, follow=follow,
             max_seconds=max_seconds, time_offset_s=time_offset_s,
             chunk_seconds=chunk_seconds, beam=beam, cpu_threads=cpu_threads,
-            local_files_only=local_files_only, start_seconds=start_seconds)
+            local_files_only=local_files_only, start_seconds=start_seconds,
+            corrector=corrector)
     return _transcribe_local_agreement(
         source, weaver, emit_node, model=model, device=device,
         compute_type=compute_type, user_agent=user_agent, referer=referer,
         vad=vad, diar_worker=diar_worker, follow=follow,
         max_seconds=max_seconds, time_offset_s=time_offset_s,
-        start_seconds=start_seconds)
+        start_seconds=start_seconds, corrector=corrector)
 
 def _fetch_json(url, timeout=15):
     req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
@@ -297,7 +309,7 @@ def _fetch_json(url, timeout=15):
 
 
 def poll_referentials(agenda_url, actors_url, organes_url, agenda, deducer,
-                      interval=30.0):
+                      interval=30.0, corrector=None):
     """Keep every lookup dictionary fresh — agenda, actors, organes.
 
     Sittings follow one another on the same live flow (and B4 can switch B2's
@@ -312,6 +324,8 @@ def poll_referentials(agenda_url, actors_url, organes_url, agenda, deducer,
                 actors = _fetch_json(actors_url)
                 organes = _fetch_json(organes_url) if organes_url else []
                 deducer.set_referentials(actors, organes)
+                if corrector is not None:
+                    corrector.set_actors(actors)
             if failing:
                 print("[referentials] back up", file=sys.stderr, flush=True)
                 failing = False
@@ -390,10 +404,14 @@ def _frame_stream(source, step_s, user_agent=None, referer=None):
     (no seek — works live and on replay). flow_s ≈ frame_index * step_s, the same time
     axis the STT stamps on (± step)."""
     from PIL import Image
+    # -user_agent/-referer are HTTP demuxer options: only valid for a URL source.
+    # Some ffmpeg builds reject them on a local file ("Option user_agent not found"),
+    # so a VOD-file --source (the CPU replay path) must not carry them.
+    is_url = str(source).startswith(("http://", "https://"))
     headers = []
-    if user_agent:
+    if is_url and user_agent:
         headers += ["-user_agent", user_agent]
-    if referer:
+    if is_url and referer:
         headers += ["-referer", referer]
     ff = subprocess.Popen(
         ["ffmpeg", "-hide_banner", "-loglevel", "error", *headers, "-i", source,
@@ -581,6 +599,17 @@ def main():
     log = w.ThreadLog(args.out)
     broadcaster = w.Broadcaster()
 
+    # post-STT proper-noun correction against acteurs.json (no-op until loaded).
+    # Fetched once now so names are fixed from the first utterance; refreshed by
+    # poll_referentials on a record switch.
+    corrector = name_correct.NameCorrector()
+    if args.actors:
+        try:
+            corrector.set_actors(_fetch_json(args.actors))
+        except Exception as e:
+            print(f"[namecorr] initial actors fetch failed ({e})",
+                  file=sys.stderr, flush=True)
+
     # the deduction side: referentials are lookup dictionaries, nothing more
     deducer = None
     if args.agenda:
@@ -591,6 +620,7 @@ def main():
         threading.Thread(target=poll_referentials,
                          args=(args.agenda, args.actors, args.organes,
                                agenda, deducer),
+                         kwargs={"corrector": corrector},
                          daemon=True).start()
 
     # single choke point so both weavers stay thread-safe
@@ -642,7 +672,7 @@ def main():
                chunk_seconds=args.chunk_seconds, beam=args.beam,
                cpu_threads=args.cpu_threads,
                local_files_only=args.local_files_only,
-               start_seconds=args.start_seconds)
+               start_seconds=args.start_seconds, corrector=corrector)
     print("\n[done]", file=sys.stderr, flush=True)
 
 

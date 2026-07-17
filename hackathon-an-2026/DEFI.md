@@ -4,26 +4,28 @@
 Création en continu d'une "trame hypertexte" de la séance publique
 
 ### Description courte
-Ariane fusionne le flux de parole (STT) avec les référentiels publics de l'Assemblée (dérouleur, amendements, acteurs) en un fil d'événements horodaté et hyperlié — déduisant *qui a dit quoi* et le résolvant en identifiants canoniques, comme le fait la régie à la main aujourd'hui.
+Pendant une séance publique, une équipe note à la main qui prend la parole, quel amendement est appelé et le résultat de chaque vote. Ariane écoute la séance et reconstitue ce fil automatiquement : chaque intervention est datée, son auteur identifié, et reliée à sa fiche officielle sur assemblee-nationale.fr.
 
 ### Porteur
 Charlotte R.
 
 ### Description longue
-Lors d'une séance publique à l'Assemblée nationale, la régie tisse à la main un fil d'événements (prise de parole, dépôt d'amendement, scrutin, vote) à partir du flux vidéo et des données publiques. Ce travail est chronophage et sujet aux erreurs.
+Lors d'une séance publique à l'Assemblée nationale, une équipe (la « régie ») suit le débat en direct et note au fil de l'eau qui parle, quel amendement est examiné et comment se termine chaque vote. Elle relie ensuite ce fil aux fiches officielles des députés et des amendements. Ce travail est long, continu et difficile à tenir en temps réel.
 
-**Ariane** automatise cette chaîne en 4 briques :
+**Ariane** le fait automatiquement, en écoutant la séance. C'est ce fil, daté et cliquable de bout en bout, que nous appelons la « trame hypertexte » : un compte rendu vivant où chaque nom, chaque amendement et chaque vote renvoie vers le document officiel correspondant.
 
-| Brique | Rôle |
+Le projet se compose de quatre modules :
+
+| Module | Rôle |
 |--------|------|
-| **B1 — Weaver** | Transforme la transcription STT en un fil d'événements, projeté sur la trame du dérouleur et résolu en IDs canoniques (orateur, amendement, scrutin). |
-| **B2 — Replay** | Rejoue causalement une séance capturée (sources + audio/vidéo) sous une horloge maîtresse, sans jamais fuiter de données postérieures à `t`. |
-| **B3 — Capture** | Enregistre les 4 flux live (dérouleur, Eliasse, NVS, vidéo) avec horodatage et déduplication, puis gèle les référentiels en un instantané. |
-| **B4 — UI** | Interface statique : frise chronologique cliquable + vidéo synchronisée + volet de vérification par la NVS (vérité terrain). |
+| **Le tisseur** (B1) | Transcrit ce qui est dit, en déduit qui parle, et replace chaque intervention dans le programme de la séance. Chaque orateur, amendement et vote est relié à sa fiche officielle. |
+| **La rediffusion** (B2) | Rejoue une séance déjà enregistrée comme si elle se déroulait maintenant. À chaque instant, le système ne voit que ce qui était connu à cet instant-là et ne connaît jamais la suite. |
+| **L'enregistrement** (B3) | Pendant la séance, enregistre les quatre sources qui arrivent en direct — le programme de séance (le « dérouleur »), le suivi des amendements (l'application Eliasse de l'Assemblée), le sommaire vidéo saisi par la régie, et la vidéo elle-même — en notant l'heure exacte de chaque élément et sans doublons. |
+| **L'interface** (B4) | L'écran : une frise chronologique cliquable, la vidéo synchronisée, et un panneau qui affiche côte à côte le résultat d'Ariane et la version officielle. |
 
-**Invariant de conception.** Le fil est *déduit de la parole*, jamais recopié depuis les flux saisis à la main par la régie. Les listes publiques servent uniquement de référentiels pour résoudre ce qui a été *entendu* en IDs canoniques. La NVS est la vérité terrain pour la validation, jamais une entrée du weaver.
+**Notre règle d'or.** Ariane devine à l'oreille : elle ne recopie jamais ce que la régie a déjà tapé. Les listes publiques de l'Assemblée (députés, amendements) servent uniquement à retrouver l'identité exacte de ce qui a été *entendu*. Le sommaire saisi par la régie n'intervient qu'après coup, comme version de référence, pour vérifier si Ariane a vu juste — jamais pour fabriquer le fil.
 
-Le tout fonctionne hors-ligne sur un laptop, sans GPU, grâce au mode *démo* qui rejoue un bundle pré-capturé.
+La démo fonctionne sur un ordinateur portable ordinaire, sans connexion Internet et sans matériel spécialisé, grâce au mode démonstration qui rejoue une séance enregistrée à l'avance.
 
 ### Image principale
 [[images/interface.jpg]]
@@ -67,23 +69,25 @@ Le tout fonctionne hors-ligne sur un laptop, sans GPU, grâce au mode *démo* qu
 - [ ] `legiwatch-serveur-mcp-parlement` — Serveur MCP Parlement ✺ LegiWatch
 
 ### Galerie
-- [Interface principale — frise + vidéo](images/interface.jpg)
-- [Démo scrutin public](images/screenshot-scrutin.png)
+- [L'interface d'Ariane — frise chronologique de la séance et vidéo synchronisée](images/interface.jpg)
 
 ### Documents
-- [Spécification architecture](docs/specs/2026-06-26-hackathon-mockup-architecture-design.md)
-- [Documentation des données](docs/data/)
 - [Diapositives de présentation](docs/diapositives.pdf)
+- [Comment fonctionne Ariane — principe et architecture](docs/architecture.pdf)
+- [Les données utilisées par Ariane](docs/donnees.pdf)
 
 ### URL de démonstration
-https://ariane-an-tail86bcaa.ts.net/demo.html
+La démonstration rejoue une séance enregistrée de plusieurs gigaoctets et s'exécute sur la machine de l'équipe : elle n'est pas hébergée en ligne en permanence. Les diapositives de présentation ci-dessous en montrent le principe et le résultat.
 
-### Déploiement Docker (démo)
+### Installer et relancer la démonstration
+Le code est public. L'enregistrement de séance que la démonstration rejoue ne l'est pas : vidéo, son et données représentent plusieurs gigaoctets, trop volumineux pour être publiés sur GitHub. **Cloner le dépôt ne suffit donc pas à relancer la démonstration** : il faut d'abord disposer d'un enregistrement, que le module « L'enregistrement » permet de constituer à partir d'une séance. Nous pouvons également en fournir un sur demande.
+
+Une fois l'enregistrement en place, et son emplacement renseigné dans `docker-compose.yml` :
+
 ```bash
 cd tricoteuses-ariane
 ./ariane.sh --launch
-tailscale funnel 8080
-# ouvrir https://<machine>.ts.net/demo.html
+# ouvrir http://127.0.0.1:8080/demo.html
 ```
 
 #### Diapositives de présentation

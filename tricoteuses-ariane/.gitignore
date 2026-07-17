@@ -11,6 +11,8 @@ venv/
 
 # B1 weaver run artifacts (regenerable output of a run)
 /b1-weaver/thread*.ndjson
+# B4 UI replay output (regenerable by demo_replay.py)
+/b4-ui/thread*.ndjson
 *.log
 
 # B3 capture output (recorded sittings live outside the repo)
@@ -31,8 +33,10 @@ pytest-cache-files-*/
 # Binary working documents stay local unless explicitly reviewed for release.
 *.docx
 
-# Graphify generated caches/intermediate files.
-/graphify-out/cache/
-/graphify-out/.graphify_*.json
-/graphify-out/.graphify_uncached.txt
+# Graphify generated output (report, graph, caches) — regenerable, referenced nowhere.
+/graphify-out/
 /data/
+
+# Fine-tune dataset (~500h audio + transcripts, ~51 Go) — too heavy for Git.
+/tools/finetune-offline/PACK/
+*.srt

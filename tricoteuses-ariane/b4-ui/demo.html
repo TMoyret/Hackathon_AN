@@ -929,9 +929,10 @@ $("btn-demo").onclick = jumpToScrutinPublic;
 connectThread();
 (() => {
   const q = new URLSearchParams(location.search);
-  if(q.get("epoch")) startEpoch = parseInt(q.get("epoch"), 10) || null;
   // ?video=<url> explicite, sinon la vidéo servie par le fil (…:8100/video.mp4)
   loadDemoVideo(q.get("video") || null);
+  // APRÈS loadDemoVideo : il remet startEpoch à null (changer de source invalide l'epoch)
+  if(q.get("epoch")) startEpoch = parseInt(q.get("epoch"), 10) || null;
   // cible : ?seek=mm:ss si fourni, sinon la séquence scrutin public (donnée-pilotée)
   const seekParam = q.get("seek");
   const target = () => seekParam != null ? parseSeek(seekParam) : scrutinPublicTs();
