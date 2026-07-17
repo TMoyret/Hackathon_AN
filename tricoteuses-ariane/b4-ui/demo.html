@@ -63,7 +63,6 @@
   .evt .t{font-family:ui-monospace,monospace; font-size:11px; color:var(--gris);}
   .evt .lbl{font-size:13px;}
   .evt.current{background:#e8edff; border-left-color:var(--bleu); box-shadow:0 0 0 1px var(--bleu) inset;}
-  .evt.ghost{opacity:.45; border-left-style:dashed; cursor:default;}
   .evt.t-orateur{border-left-color:#6a6af4;}
   .evt.t-amdt{border-left-color:var(--bleu);}
   .evt.t-sort_ok{border-left-color:var(--ok);}
@@ -534,7 +533,9 @@ const typeClass = e => e.type==="orateur" ? "t-orateur"
 let userScrolled = 0;
 $("tl-list").addEventListener("wheel", ()=> userScrolled = Date.now());
 
-function renderTimeline(past, nextEvt){
+// Ne rend QUE le passé : en direct, l'événement suivant n'existe pas encore.
+// Afficher un « à suivre » (que seul un replay peut connaître) trahirait la trame.
+function renderTimeline(past){
   const list = $("tl-list");
   list.innerHTML = "";
   if(!past.length){ list.innerHTML = `<div id="tl-empty">En attente du fil Ariane (B1)…</div>`; return; }
@@ -551,12 +552,6 @@ function renderTimeline(past, nextEvt){
     d.onclick = () => seekTo(e.ts);
     list.appendChild(d);
   });
-  if(nextEvt){
-    const g = document.createElement("div");
-    g.className = "evt ghost";
-    g.innerHTML = `<div class="t">à suivre</div><div class="lbl">${nextEvt.label}</div>`;
-    list.appendChild(g);
-  }
   if(Date.now() - userScrolled > 4000) list.scrollTop = list.scrollHeight;
 }
 
@@ -670,11 +665,12 @@ function render(t){
   renderSpeaker(state.orateur);
   renderCtx(state);
   if(past.length !== lastPastLen){                    // re-rendre la liste au besoin
-    renderTimeline(past, EVENTS[past.length]);
+    renderTimeline(past);
     lastPastLen = past.length;
   }
-  // « retard réel » (info) : écart entre la frame jouée et le temps réel
-  if(startEpoch && video.currentTime){
+  // « retard réel » (info) : écart entre la frame jouée et le temps réel.
+  // N'a de sens que sur un direct : en rejeu, on afficherait l'âge de la séance.
+  if(mode === "live" && startEpoch && video.currentTime){
     const lag = Date.now()/1000 - (startEpoch + video.currentTime);
     $("lag").textContent = `retard ${lag.toFixed(0)} s`;
   } else $("lag").textContent = "";
@@ -932,7 +928,12 @@ connectThread();
   // ?video=<url> explicite, sinon la vidéo servie par le fil (…:8100/video.mp4)
   loadDemoVideo(q.get("video") || null);
   // APRÈS loadDemoVideo : il remet startEpoch à null (changer de source invalide l'epoch)
+  // ?epoch=<s> force la valeur ; sinon on prend celle du bundle (servie hors-ligne par
+  // demo_replay). Sans elle, l'horloge de séance retomberait sur le repli T0.
   if(q.get("epoch")) startEpoch = parseInt(q.get("epoch"), 10) || null;
+  else fetch("/epoch").then(r => r.json())
+                      .then(j => { if(j.start_epoch) startEpoch = j.start_epoch; })
+                      .catch(() => {});
   // cible : ?seek=mm:ss si fourni, sinon la séquence scrutin public (donnée-pilotée)
   const seekParam = q.get("seek");
   const target = () => seekParam != null ? parseSeek(seekParam) : scrutinPublicTs();

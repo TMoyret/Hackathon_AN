@@ -15,6 +15,7 @@ import argparse
 import glob
 import json
 import os
+import re
 import sys
 import threading
 import time
@@ -44,6 +45,27 @@ def _pick_video(bundle):
                              or "demo" in os.path.basename(p).lower() else 1,
                              os.path.getsize(p)))
     return vids[0]
+
+
+_STARTTIME_RE = re.compile(rb'starttime="(\d+)"')
+
+
+def _bundle_start_epoch(bundle):
+    """Instant réel (epoch s) de la 1re image de la vidéo, pour l'horloge de séance.
+
+    Le liveplayer capté par B3 le porte (`starttime`) : on le lit dans le bundle
+    plutôt que sur videos.assemblee-nationale.fr, pour rester hors-ligne. Sans lui,
+    B4 retombe sur son repli d'affichage et date la séance n'importe quand.
+    """
+    for path in sorted(glob.glob(os.path.join(bundle, "raw", "liveplayer", "*.nvs"))):
+        try:
+            with open(path, "rb") as f:
+                m = _STARTTIME_RE.search(f.read())
+        except OSError:
+            continue
+        if m:
+            return int(m.group(1))
+    return None
 
 
 def scan_ocr_events(bundle, b1_dir, step_s=3.0, end_s=None, lang="fra",
@@ -181,6 +203,7 @@ class Handler(BaseHTTPRequestHandler):
     protocol_version = "HTTP/1.1"
     nodes = []
     video_path = None
+    start_epoch = None
 
     def log_message(self, *a):
         pass
@@ -195,7 +218,19 @@ class Handler(BaseHTTPRequestHandler):
             return self._thread()
         if self.path.startswith("/video"):
             return self._video()
+        if self.path.startswith("/epoch"):
+            return self._epoch()
         self.send_response(404); self.send_header("Content-Length", "0"); self.end_headers()
+
+    def _epoch(self):
+        """Epoch du début de la vidéo — B4 en dérive l'heure de séance affichée."""
+        body = json.dumps({"start_epoch": self.start_epoch}).encode("utf-8")
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json; charset=utf-8")
+        self.send_header("Content-Length", str(len(body)))
+        self._cors()
+        self.end_headers()
+        self.wfile.write(body)
 
     def _thread_json(self):
         """Tout le fil en une réponse JSON qui SE TERMINE (réseau au repos -> capture)."""
@@ -310,6 +345,7 @@ def main():
     Handler.nodes = nodes
     # serve the SAME video OCR scanned (faststart copy), so overlay timecodes align
     Handler.video_path = _pick_video(os.path.abspath(args.bundle))
+    Handler.start_epoch = _bundle_start_epoch(os.path.abspath(args.bundle))
     httpd = ThreadingHTTPServer(("127.0.0.1", args.port), Handler)
     print(f"[serve] SSE http://127.0.0.1:{args.port}/thread  "
           f"video={'/video.mp4' if Handler.video_path else '—'}", file=sys.stderr)

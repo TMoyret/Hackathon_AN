@@ -23,7 +23,7 @@ from urllib.parse import urlparse, parse_qs
 NVS_URL = "https://videos.assemblee-nationale.fr/Datas/an/{did}/content/liveplayer.nvs"
 _STARTTIME = re.compile(rb'starttime="(\d+)"')
 
-PROXY_PATHS = {"/thread", "/thread.json", "/video.mp4"}
+PROXY_PATHS = {"/thread", "/thread.json", "/video.mp4", "/epoch"}
 
 
 class Handler(SimpleHTTPRequestHandler):

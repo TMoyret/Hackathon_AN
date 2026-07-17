@@ -70,6 +70,8 @@ La démo fonctionne sur un ordinateur portable ordinaire, sans connexion Interne
 
 ### Galerie
 - [L'interface d'Ariane — frise chronologique de la séance et vidéo synchronisée](images/interface.jpg)
+- [Démonstration filmée (2 min) — le fil se tisse pendant un scrutin public](images/demo-ariane.mp4)
+- [Résultat d'un scrutin public, lu par Ariane sur l'écran officiel](images/screenshot-scrutin.png)
 
 ### Documents
 - [Diapositives de présentation](docs/diapositives.pdf)
@@ -77,7 +79,7 @@ La démo fonctionne sur un ordinateur portable ordinaire, sans connexion Interne
 - [Les données utilisées par Ariane](docs/donnees.pdf)
 
 ### URL de démonstration
-La démonstration rejoue une séance enregistrée de plusieurs gigaoctets et s'exécute sur la machine de l'équipe : elle n'est pas hébergée en ligne en permanence. Les diapositives de présentation ci-dessous en montrent le principe et le résultat.
+https://github.com/TMoyret/Hackathon_AN/raw/main/hackathon-an-2026/images/demo-ariane.mp4
 
 ### Installer et relancer la démonstration
 Le code est public. L'enregistrement de séance que la démonstration rejoue ne l'est pas : vidéo, son et données représentent plusieurs gigaoctets, trop volumineux pour être publiés sur GitHub. **Cloner le dépôt ne suffit donc pas à relancer la démonstration** : il faut d'abord disposer d'un enregistrement, que le module « L'enregistrement » permet de constituer à partir d'une séance. Nous pouvons également en fournir un sur demande.

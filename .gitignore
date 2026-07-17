@@ -21,3 +21,9 @@
 **/*.docx
 /tricoteuses-ariane/data/
 /tricoteuses-ariane/data/
+
+# La vidéo de démonstration du défi est un livrable publié sur le site du hackathon :
+# elle échappe aux règles média ci-dessus (négation valide : seuls des *fichiers*
+# sont exclus plus haut, aucun dossier parent).
+!hackathon-an-2026/images/*.mp4
+!hackathon-an-2026/images/*.webm
